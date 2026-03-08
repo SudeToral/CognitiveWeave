@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: cognitiveweave
+
+resources:
+  - namespace.yaml
+  - neo4j/pvc.yaml
+  - neo4j/deployment.yaml
+  - neo4j/service.yaml
+  - redis/deployment.yaml
+  - minio/deployment.yaml
+  - app/configmap.yaml
+  - app/secret.yaml
+  - app/deployment.yaml
+  - monitoring/prometheus-configmap.yaml
+  - monitoring/prometheus.yaml
+  - monitoring/grafana.yaml
+
+

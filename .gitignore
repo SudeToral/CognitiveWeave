@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.py[oc]
+*.pyd
+build/
+dist/
+wheels/
+*.egg-info/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# uv
+.uv/
+uv.lock
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Testing & coverage
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# FAISS index files
+*.index
+*.faiss
+
+# Benchmark outputs
+benchmarks/results/
+*.json.out
+
+# Kubernetes secrets (never commit real secrets)
+k8s/app/secret.yaml
+
+# macOS
+.DS_Store
+.AppleDouble
+
+# Logs
+*.log
+logs/
