@@ -124,6 +124,7 @@ def build_mcp_server(
                 },
             )
             faiss.add(node_id, arguments["content"], arguments.get("metadata"))
+            faiss.save()
             # Notify EpistemologistAgent
             await bus.publish(
                 "cw:epistemologist",
@@ -164,19 +165,36 @@ def build_mcp_server(
 
 async def run_stdio(settings: Settings | None = None) -> None:
     """Entry point for `uv run cognitiveweave-mcp` — runs over stdio."""
+    import os
+    from pathlib import Path as _Path
+    # Ensure cwd is project root so relative paths (data/faiss.index) resolve correctly.
+    project_root = _Path(__file__).resolve().parent.parent.parent.parent
+    os.chdir(project_root)
+
     if settings is None:
         settings = Settings()
 
     neo4j = Neo4jClient(settings.neo4j)
-    neo4j.connect()
-    neo4j.create_constraints()
+    try:
+        neo4j.connect()
+        neo4j.create_constraints()
+    except Exception as e:
+        import sys
+        print(f"[cognitiveweave] Neo4j not available at startup: {e}", file=sys.stderr)
 
     faiss = FAISSIndex(settings.faiss)
     faiss.load_model()
-    faiss.build_index()
+    if _Path(settings.faiss.index_path).exists():
+        faiss.load()
+    else:
+        faiss.build_index()
 
     bus = RedisBus(settings.redis)
-    await bus.connect()
+    try:
+        await bus.connect()
+    except Exception as e:
+        import sys
+        print(f"[cognitiveweave] Redis not available at startup: {e}", file=sys.stderr)
 
     server = build_mcp_server(settings, neo4j, faiss, bus)
 
@@ -186,3 +204,8 @@ async def run_stdio(settings: Settings | None = None) -> None:
     finally:
         await bus.close()
         neo4j.close()
+
+
+if __name__ == "__main__":
+    import asyncio
+    asyncio.run(run_stdio())

@@ -128,9 +128,10 @@ class Neo4jClient:
         limit: int = 20,
     ) -> list[dict[str, Any]]:
         """BFS from seed nodes. Returns scored candidates + boosts traversed edge stability."""
-        query = """
+        # Variable-length path bounds must be literals in Neo4j 5.x — interpolate max_hops.
+        query = f"""
         UNWIND $ids AS seed
-        MATCH path = (start:KnowledgeNode {id: seed})-[*1..$hops]-(candidate:KnowledgeNode)
+        MATCH path = (start:KnowledgeNode {{id: seed}})-[*1..{max_hops}]-(candidate:KnowledgeNode)
         WHERE candidate.id <> seed
         WITH candidate, min(length(path)) AS min_hops
         RETURN candidate.id AS id,
@@ -140,7 +141,7 @@ class Neo4jClient:
         LIMIT $limit
         """
         with self._driver.session(database=self._settings.database) as s:
-            result = s.run(query, ids=node_ids, hops=max_hops, limit=limit)
+            result = s.run(query, ids=node_ids, limit=limit)
             rows = [
                 {"id": r["id"], "score": r["score"], **r["props"]}
                 for r in result
