@@ -127,16 +127,26 @@ class Neo4jClient:
         max_hops: int = 2,
         limit: int = 20,
     ) -> list[dict[str, Any]]:
-        """BFS from seed nodes. Returns scored candidates + boosts traversed edge stability."""
+        """BFS from seed nodes. Returns scored candidates + boosts traversed edge stability.
+
+        Score = (1 / hop_distance) * avg_edge_weight_along_path
+        This makes temporal decay affect retrieval: edges that have decayed to low
+        weights reduce the structural score of paths through them.
+        """
         # Variable-length path bounds must be literals in Neo4j 5.x — interpolate max_hops.
         query = f"""
         UNWIND $ids AS seed
         MATCH path = (start:KnowledgeNode {{id: seed}})-[*1..{max_hops}]-(candidate:KnowledgeNode)
         WHERE candidate.id <> seed
-        WITH candidate, min(length(path)) AS min_hops
+        WITH candidate,
+             length(path) AS hops,
+             [r IN relationships(path) | coalesce(r.weight, 1.0)] AS weights
+        WITH candidate,
+             min(hops) AS min_hops,
+             avg(reduce(s = 0.0, w IN weights | s + w) / size(weights)) AS avg_weight
         RETURN candidate.id AS id,
                properties(candidate) AS props,
-               1.0 / (min_hops + 1.0) AS score
+               (1.0 / (min_hops + 1.0)) * avg_weight AS score
         ORDER BY score DESC
         LIMIT $limit
         """
