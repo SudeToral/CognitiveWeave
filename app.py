@@ -17,6 +17,10 @@ from cognitiveweave.config.settings import Settings
 from cognitiveweave.storage.neo4j_client import Neo4jClient
 from cognitiveweave.storage.faiss_index import FAISSIndex
 from cognitiveweave.retrieval.hybrid_retriever import HybridRetriever
+from cognitiveweave.llm.ollama_client import OllamaClient
+from cognitiveweave.experiments.agent import SocietyAgent
+from cognitiveweave.experiments.population import AgentPopulation
+from cognitiveweave.experiments.observer import ExperimentObserver
 
 st.set_page_config(
     page_title="CognitiveWeave",
@@ -133,7 +137,7 @@ with st.sidebar:
 
     page = st.radio(
         "Navigate",
-        ["Ask the Graph", "Add Knowledge", "Decay Demo", "Graph Stats"],
+        ["Ask the Graph", "Add Knowledge", "Decay Demo", "Graph Stats", "Belief Dynamics"],
         label_visibility="collapsed",
     )
 
@@ -230,7 +234,8 @@ if page == "Ask the Graph":
         st.plotly_chart(fig, use_container_width=True)
 
         for i, r in enumerate(results):
-            content = r.metadata.get("content", "")
+            node    = neo4j.get_node(r.id)
+            content = (node or {}).get("content", "") if node else ""
             cluster = r.metadata.get("cluster", "").replace("_", " ").title()
             how_found = []
             if r.faiss_rank and r.faiss_rank <= 10:
@@ -322,8 +327,9 @@ elif page == "Add Knowledge":
             st.markdown("**Similar concepts already in the graph:**")
             results = retriever.retrieve(content.strip(), top_k=5)
             for i, r in enumerate(results[:5]):
-                c = r.metadata.get("content", "")
-                st.info(f"#{i+1} **{r.id}** — {c[:100]}{'…' if len(c)>100 else ''}")
+                node = neo4j.get_node(r.id)
+                c = (node or {}).get("content", "") if node else ""
+                st.info(f"#{i+1} **{r.id}** — {c[:120]}{'…' if len(c)>120 else ''}")
 
             st.caption("Go to Ask the Graph to query your new knowledge.")
 
@@ -567,3 +573,225 @@ elif page == "Graph Stats":
                 s.run("MATCH ()-[r]->() SET r.last_decay_at = toString(datetime())")
             st.success("All edges reset to fresh")
             st.rerun()
+
+
+# ── page: Belief Dynamics ─────────────────────────────────────────────────────
+
+elif page == "Belief Dynamics":
+    st.title("Belief Dynamics Experiment")
+    st.markdown(
+        "A closed population of LLM agents shares this knowledge graph as their "
+        "only communication channel. Each agent has **asymmetric initial knowledge** "
+        "and a **limited bandwidth** — it can only read a few nodes per cycle. "
+        "We observe how shared beliefs form, drift, and stabilize without a ground truth authority."
+    )
+
+    # ── agent presets ────────────────────────────────────────────────────────
+    AGENT_PRESETS = [
+        {
+            "name":     "Mira",
+            "interest": "memory consolidation and the role of the hippocampus in sleep",
+            "seed":     "c3_hippocampus",
+            "color":    "#89b4fa",
+        },
+        {
+            "name":     "Kael",
+            "interest": "attention mechanisms in transformer models and knowledge retrieval",
+            "seed":     "c4_attention",
+            "color":    "#a6e3a1",
+        },
+        {
+            "name":     "Sova",
+            "interest": "forgetting curves and long-term memory retention strategies",
+            "seed":     "c2_ebbinghaus",
+            "color":    "#fab387",
+        },
+    ]
+
+    # ── sidebar controls ─────────────────────────────────────────────────────
+    with st.sidebar:
+        st.divider()
+        st.caption("Experiment controls")
+        bandwidth   = st.slider("Bandwidth (nodes/cycle)", 3, 10, 5,
+                                help="How many nodes each agent can read per cycle")
+        n_cycles    = st.number_input("Cycles to run", min_value=1, max_value=20, value=3)
+        use_ollama  = st.checkbox("Use Ollama for synthesis", value=True,
+                                  help="Uncheck to use heuristic fallback (faster, no LLM)")
+
+    # ── init / reset ─────────────────────────────────────────────────────────
+    col_init, col_reset = st.columns(2)
+
+    with col_init:
+        if st.button("Initialize agents", use_container_width=True, type="primary"):
+            ollama = OllamaClient(settings.ollama)
+            agents = [
+                SocietyAgent(
+                    name     = p["name"],
+                    interest = p["interest"],
+                    retriever= retriever,
+                    neo4j    = neo4j,
+                    ollama   = ollama,
+                    bandwidth= bandwidth,
+                    seed_node_id=p["seed"],
+                )
+                for p in AGENT_PRESETS
+            ]
+            observer   = ExperimentObserver(neo4j, database=settings.neo4j.database)
+            population = AgentPopulation(agents)
+            st.session_state["exp_population"] = population
+            st.session_state["exp_observer"]   = observer
+            st.session_state["exp_snapshots"]  = []
+            st.session_state["exp_cycle"]      = 0
+            st.success(f"Initialized {len(agents)} agents: {', '.join(p['name'] for p in AGENT_PRESETS)}")
+
+    with col_reset:
+        if st.button("Reset experiment", use_container_width=True):
+            if "exp_observer" in st.session_state:
+                deleted = st.session_state["exp_observer"].cleanup()
+                st.info(f"Deleted {deleted} experiment nodes from graph.")
+            for key in ["exp_population", "exp_observer", "exp_snapshots", "exp_cycle"]:
+                st.session_state.pop(key, None)
+            st.rerun()
+
+    if "exp_population" not in st.session_state:
+        st.info("Click **Initialize agents** to start.")
+        st.stop()
+
+    population: AgentPopulation = st.session_state["exp_population"]
+    observer:   ExperimentObserver = st.session_state["exp_observer"]
+    snapshots:  list = st.session_state["exp_snapshots"]
+
+    # ── agent cards ───────────────────────────────────────────────────────────
+    st.divider()
+    st.markdown("### Agents")
+    agent_cols = st.columns(len(AGENT_PRESETS))
+    for i, (agent, preset) in enumerate(zip(population.agents, AGENT_PRESETS)):
+        with agent_cols[i]:
+            st.markdown(
+                f"<div style='border-left: 4px solid {preset['color']}; "
+                f"padding: 0.5rem 0.8rem; border-radius:4px; background:#1e1e2e'>"
+                f"<b>{agent.name}</b><br>"
+                f"<small style='color:#cdd6f4'>{agent.interest[:80]}…</small><br>"
+                f"<small>seed: <code>{agent._seed or 'none'}</code> · bw: {agent.bandwidth}</small>"
+                f"</div>",
+                unsafe_allow_html=True,
+            )
+
+    # ── run cycles ────────────────────────────────────────────────────────────
+    st.divider()
+    current_cycle = st.session_state.get("exp_cycle", 0)
+    st.markdown(f"### Run cycles  —  current cycle: **{current_cycle}**")
+
+    if st.button(f"Run {n_cycles} cycle(s)", use_container_width=True, type="primary"):
+        progress = st.progress(0.0, text="Running…")
+        for i in range(int(n_cycles)):
+            result = population.run_cycle(current_cycle + i)
+            snap   = observer.snapshot(current_cycle + i, population.agent_names)
+            snapshots.append(snap)
+            progress.progress((i + 1) / int(n_cycles),
+                              text=f"Cycle {current_cycle + i} done — "
+                                   f"{len(result.successful_writes)} writes")
+        st.session_state["exp_cycle"]     = current_cycle + int(n_cycles)
+        st.session_state["exp_snapshots"] = snapshots
+        progress.empty()
+        st.rerun()
+
+    if not snapshots:
+        st.info("No cycles run yet.")
+        st.stop()
+
+    # ── metrics over time ────────────────────────────────────────────────────
+    st.divider()
+    st.markdown("### Belief production over time")
+
+    agent_names  = population.agent_names
+    agent_colors = {p["name"]: p["color"] for p in AGENT_PRESETS}
+    cycles_axis  = [s.cycle for s in snapshots]
+
+    fig_prod = go.Figure()
+    for name in agent_names:
+        fig_prod.add_scatter(
+            name=name,
+            x=cycles_axis,
+            y=[s.node_counts.get(name, 0) for s in snapshots],
+            mode="lines+markers",
+            line=dict(color=agent_colors.get(name, "#cdd6f4"), width=2),
+        )
+    fig_prod.update_layout(
+        title="Cumulative nodes written per agent",
+        paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+        font_color="#cdd6f4", height=280, margin=dict(t=40, b=10),
+        xaxis_title="Cycle", yaxis_title="Nodes written",
+    )
+    st.plotly_chart(fig_prod, width="stretch")
+
+    fig_conf = go.Figure()
+    for name in agent_names:
+        fig_conf.add_scatter(
+            name=name,
+            x=cycles_axis,
+            y=[s.avg_confidence.get(name, 0.0) for s in snapshots],
+            mode="lines+markers",
+            line=dict(color=agent_colors.get(name, "#cdd6f4"), width=2, dash="dot"),
+        )
+    fig_conf.update_layout(
+        title="Average belief confidence per agent",
+        paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+        font_color="#cdd6f4", height=260, margin=dict(t=40, b=10),
+        xaxis_title="Cycle", yaxis_title="Avg confidence",
+        yaxis=dict(range=[0, 1.05]),
+    )
+    st.plotly_chart(fig_conf, width="stretch")
+
+    # ── cross-pollination ─────────────────────────────────────────────────────
+    latest = snapshots[-1]
+
+    st.divider()
+    st.markdown("### Cross-pollination")
+    st.caption(
+        "How many times has each agent built a belief on top of *another agent's* write? "
+        "A rising count means knowledge is spreading across the population."
+    )
+    cross_cols = st.columns(len(agent_names))
+    for i, name in enumerate(agent_names):
+        cross_cols[i].metric(
+            name,
+            latest.cross_reads.get(name, 0),
+            help="Times this agent derived from another agent's node",
+        )
+
+    # ── consensus anchors ─────────────────────────────────────────────────────
+    if latest.consensus_anchors:
+        st.divider()
+        st.markdown("### Emerging consensus anchors")
+        st.caption(
+            "These are knowledge nodes that **multiple agents independently** chose "
+            "as the foundation for their beliefs — focal points crystallizing without "
+            "any central authority."
+        )
+        for anchor_id in latest.consensus_anchors:
+            node = neo4j.get_node(anchor_id)
+            content = (node or {}).get("content", "")
+            st.success(f"`{anchor_id}` — {content[:200]}")
+
+    # ── belief log ────────────────────────────────────────────────────────────
+    st.divider()
+    st.markdown("### Belief log")
+    nodes = observer.get_all_experiment_nodes()
+    if nodes:
+        for n in reversed(nodes[-30:]):
+            agent_name = n.get("source", "?")
+            color = agent_colors.get(agent_name, "#cdd6f4")
+            conf  = float(n.get("confidence") or 0)
+            cycle = n.get("cycle", "?")
+            belief = n.get("content", "")
+            st.markdown(
+                f"<div style='border-left: 3px solid {color}; padding: 0.4rem 0.8rem; "
+                f"margin-bottom:0.3rem; background:#1e1e2e; border-radius:4px'>"
+                f"<small><b>{agent_name}</b> · cycle {cycle} · conf {conf:.2f}</small><br>"
+                f"{belief}"
+                f"</div>",
+                unsafe_allow_html=True,
+            )
+    else:
+        st.info("No experiment nodes written yet.")
