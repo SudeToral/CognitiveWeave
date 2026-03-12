@@ -65,6 +65,10 @@ class FAISSIndex:
         vecs = self._model.encode(texts, normalize_embeddings=True)
         return vecs.astype("float32")
 
+    def encode(self, texts: list[str]) -> np.ndarray:
+        """Return L2-normalised embeddings for the given texts (float32)."""
+        return self._embed(texts)
+
     def add(self, node_id: str, text: str, metadata: dict[str, Any] | None = None) -> None:
         vec = self._embed([text])
         self._index.add(vec)

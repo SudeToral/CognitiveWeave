@@ -6,7 +6,7 @@ Run:
 """
 from __future__ import annotations
 
-import math, sys, os
+import math, sys, os, json, datetime
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
 import streamlit as st
@@ -633,6 +633,7 @@ elif page == "Belief Dynamics":
                     ollama   = ollama,
                     bandwidth= bandwidth,
                     seed_node_id=p["seed"],
+                    faiss    = faiss,
                 )
                 for p in AGENT_PRESETS
             ]
@@ -654,35 +655,49 @@ elif page == "Belief Dynamics":
             st.rerun()
 
     if "exp_population" not in st.session_state:
-        st.info("Click **Initialize agents** to start.")
-        st.stop()
+        # Auto-restore from Neo4j if experiment data exists (e.g. after Streamlit restart)
+        _restore_observer = ExperimentObserver(neo4j, database=settings.neo4j.database)
+        if _restore_observer.has_experiment_data():
+            _agent_names = [p["name"] for p in AGENT_PRESETS]
+            _snapshots   = _restore_observer.rebuild_snapshots(_agent_names)
+            _max_cycle   = max((s.cycle for s in _snapshots), default=0)
+            st.session_state["exp_observer"]   = _restore_observer
+            st.session_state["exp_snapshots"]  = _snapshots
+            st.session_state["exp_cycle"]      = _max_cycle + 1
+            # Stub population (read-only, no agents) — Initialize to run new cycles
+            st.session_state["exp_population"] = AgentPopulation([])
+            st.info("Previous experiment restored from graph. Click **Initialize agents** to run more cycles.")
+        else:
+            st.info("Click **Initialize agents** to start.")
+            st.stop()
 
     population: AgentPopulation = st.session_state["exp_population"]
     observer:   ExperimentObserver = st.session_state["exp_observer"]
     snapshots:  list = st.session_state["exp_snapshots"]
 
     # ── agent cards ───────────────────────────────────────────────────────────
-    st.divider()
-    st.markdown("### Agents")
-    agent_cols = st.columns(len(AGENT_PRESETS))
-    for i, (agent, preset) in enumerate(zip(population.agents, AGENT_PRESETS)):
-        with agent_cols[i]:
-            st.markdown(
-                f"<div style='border-left: 4px solid {preset['color']}; "
-                f"padding: 0.5rem 0.8rem; border-radius:4px; background:#1e1e2e'>"
-                f"<b>{agent.name}</b><br>"
-                f"<small style='color:#cdd6f4'>{agent.interest[:80]}…</small><br>"
-                f"<small>seed: <code>{agent._seed or 'none'}</code> · bw: {agent.bandwidth}</small>"
-                f"</div>",
-                unsafe_allow_html=True,
-            )
+    if population.agents:
+        st.divider()
+        st.markdown("### Agents")
+        agent_cols = st.columns(len(AGENT_PRESETS))
+        for i, (agent, preset) in enumerate(zip(population.agents, AGENT_PRESETS)):
+            with agent_cols[i]:
+                st.markdown(
+                    f"<div style='border-left: 4px solid {preset['color']}; "
+                    f"padding: 0.5rem 0.8rem; border-radius:4px; background:#1e1e2e'>"
+                    f"<b>{agent.name}</b><br>"
+                    f"<small style='color:#cdd6f4'>{agent.interest[:80]}…</small><br>"
+                    f"<small>seed: <code>{agent._seed or 'none'}</code> · bw: {agent.bandwidth}</small>"
+                    f"</div>",
+                    unsafe_allow_html=True,
+                )
 
     # ── run cycles ────────────────────────────────────────────────────────────
     st.divider()
     current_cycle = st.session_state.get("exp_cycle", 0)
     st.markdown(f"### Run cycles  —  current cycle: **{current_cycle}**")
 
-    if st.button(f"Run {n_cycles} cycle(s)", use_container_width=True, type="primary"):
+    if population.agents and st.button(f"Run {n_cycles} cycle(s)", use_container_width=True, type="primary"):
         progress = st.progress(0.0, text="Running…")
         for i in range(int(n_cycles)):
             result = population.run_cycle(current_cycle + i)
@@ -704,7 +719,7 @@ elif page == "Belief Dynamics":
     st.divider()
     st.markdown("### Belief production over time")
 
-    agent_names  = population.agent_names
+    agent_names  = population.agent_names or [p["name"] for p in AGENT_PRESETS]
     agent_colors = {p["name"]: p["color"] for p in AGENT_PRESETS}
     cycles_axis  = [s.cycle for s in snapshots]
 
@@ -760,6 +775,42 @@ elif page == "Belief Dynamics":
             help="Times this agent derived from another agent's node",
         )
 
+    # ── belief drift ──────────────────────────────────────────────────────────
+    st.divider()
+    st.markdown("### Belief drift")
+    st.caption(
+        "Cosine distance between each agent's cycle-0 belief and each subsequent cycle. "
+        "A rising line means the agent's language is moving away from its starting point — "
+        "absorbing concepts from the shared graph."
+    )
+    drift_series: dict[str, tuple[list[int], list[float]]] = {}
+    for name in agent_names:
+        beliefs_by_cycle = observer.get_agent_beliefs_by_cycle(name)
+        if len(beliefs_by_cycle) < 2:
+            continue
+        # last belief written each cycle
+        cycle_map: dict[int, str] = {}
+        for cyc, text in beliefs_by_cycle:
+            cycle_map[cyc] = text
+        sorted_cycles = sorted(cycle_map.keys())
+        texts = [cycle_map[c] for c in sorted_cycles]
+        vecs = faiss.encode(texts)
+        base = vecs[0]
+        dists = [float(1.0 - float(base @ vecs[i])) for i in range(len(vecs))]
+        drift_series[name] = (sorted_cycles, dists)
+
+    if drift_series:
+        fig_drift = go.Figure()
+        for name, (cycles, dists) in drift_series.items():
+            fig_drift.add_scatter(
+                x=cycles, y=dists, mode="lines+markers", name=name,
+            )
+        fig_drift.update_layout(
+            xaxis_title="Cycle", yaxis_title="Drift from cycle 0 (cosine distance)",
+            yaxis=dict(range=[0, 1]), height=300, margin=dict(l=0, r=0, t=20, b=0),
+        )
+        st.plotly_chart(fig_drift, width="stretch")
+
     # ── consensus anchors ─────────────────────────────────────────────────────
     if latest.consensus_anchors:
         st.divider()
@@ -773,6 +824,47 @@ elif page == "Belief Dynamics":
             node = neo4j.get_node(anchor_id)
             content = (node or {}).get("content", "")
             st.success(f"`{anchor_id}` — {content[:200]}")
+
+    # ── save run ──────────────────────────────────────────────────────────────
+    st.divider()
+    col_save, col_label = st.columns([1, 3])
+    with col_label:
+        run_label = st.text_input(
+            "Run label (optional)",
+            placeholder="e.g. baseline_3agents_8cycles",
+            label_visibility="collapsed",
+        )
+    with col_save:
+        if st.button("Save run to disk", use_container_width=True):
+            timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+            label = run_label.strip().replace(" ", "_") or "run"
+            filename = f"experiments/runs/{timestamp}_{label}.json"
+            run_data = {
+                "saved_at": timestamp,
+                "label": label,
+                "agent_presets": AGENT_PRESETS,
+                "total_cycles": st.session_state.get("exp_cycle", 0),
+                "snapshots": [
+                    {
+                        "cycle": s.cycle,
+                        "node_counts": s.node_counts,
+                        "avg_confidence": s.avg_confidence,
+                        "total_nodes": s.total_nodes,
+                        "consensus_anchors": s.consensus_anchors,
+                        "cross_reads": s.cross_reads,
+                    }
+                    for s in snapshots
+                ],
+                "belief_log": observer.get_all_experiment_nodes(),
+                "drift_series": {
+                    name: {"cycles": cyc, "distances": dists}
+                    for name, (cyc, dists) in drift_series.items()
+                },
+            }
+            os.makedirs("experiments/runs", exist_ok=True)
+            with open(filename, "w") as f:
+                json.dump(run_data, f, indent=2, default=str)
+            st.success(f"Saved → `{filename}`")
 
     # ── belief log ────────────────────────────────────────────────────────────
     st.divider()

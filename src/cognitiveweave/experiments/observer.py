@@ -89,6 +89,31 @@ class ExperimentObserver:
         with self._neo4j._driver.session(database=self._db) as s:
             return [dict(r) for r in s.run(query)]
 
+    def has_experiment_data(self) -> bool:
+        """Return True if any experiment nodes exist in the graph."""
+        query = "MATCH (n:KnowledgeNode {cluster: 'experiment'}) RETURN count(n) AS c LIMIT 1"
+        with self._neo4j._driver.session(database=self._db) as s:
+            record = s.run(query).single()
+            return bool(record and record["c"] > 0)
+
+    def rebuild_snapshots(self, agent_names: list[str]) -> list["BeliefSnapshot"]:
+        """Reconstruct per-cycle BeliefSnapshot history from existing Neo4j data."""
+        query = "MATCH (n:KnowledgeNode {cluster: 'experiment'}) RETURN DISTINCT n.cycle AS c ORDER BY c ASC"
+        with self._neo4j._driver.session(database=self._db) as s:
+            cycles = [r["c"] for r in s.run(query) if r["c"] is not None]
+        return [self.snapshot(c, agent_names) for c in cycles]
+
+    def get_agent_beliefs_by_cycle(self, agent_name: str) -> list[tuple[int, str]]:
+        """Return [(cycle_num, belief_text), ...] ordered by cycle ascending."""
+        query = """
+        MATCH (n:KnowledgeNode {source: $src, cluster: 'experiment'})
+        RETURN n.cycle AS cycle, n.content AS content
+        ORDER BY n.cycle ASC
+        """
+        with self._neo4j._driver.session(database=self._db) as s:
+            return [(r["cycle"], r["content"]) for r in s.run(query, src=agent_name)
+                    if r["content"]]
+
     def cleanup(self) -> int:
         """Delete all experiment nodes (for experiment reset)."""
         query = """

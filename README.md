@@ -83,6 +83,23 @@ Implemented: hybrid retrieval with RRF and recency boost, Ebbinghaus edge decay 
 
 Remaining: k3s deployment manifests, Prometheus and Grafana integration, end-to-end benchmark against GraphRAG baseline, ArXiv manuscript.
 
+## Quickstart
+
+```bash
+# 1. start services
+docker compose up -d
+
+# 2. start llm
+ollama serve
+# (first time only)
+ollama pull qwen2.5:3b
+
+# 3. run dashboard
+uv run streamlit run app.py
+```
+
+To stop: `docker compose down` — data is persisted in Docker volumes.
+
 ## References
 
 Ebbinghaus, H. (1885). *Uber das Gedachtnis*. Duncker and Humblot.

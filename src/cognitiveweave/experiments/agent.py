@@ -20,6 +20,7 @@ from typing import Any
 
 from cognitiveweave.llm.ollama_client import OllamaClient, _parse_json
 from cognitiveweave.retrieval.hybrid_retriever import HybridRetriever
+from cognitiveweave.storage.faiss_index import FAISSIndex
 from cognitiveweave.storage.neo4j_client import Neo4jClient
 
 logger = logging.getLogger(__name__)
@@ -76,6 +77,7 @@ class SocietyAgent:
         *,
         bandwidth: int = 5,
         seed_node_id: str | None = None,
+        faiss: FAISSIndex | None = None,
     ) -> None:
         self.name = name
         self.interest = interest
@@ -84,6 +86,7 @@ class SocietyAgent:
         self._retriever = retriever
         self._neo4j = neo4j
         self._ollama = ollama
+        self._faiss = faiss
         self.memory = AgentMemory()
 
     # ------------------------------------------------------------------
@@ -113,7 +116,7 @@ class SocietyAgent:
             )
 
         belief, confidence = self._synthesize(fragments, cycle_num)
-        node_id = self._write(belief, confidence, cycle_num, results[0].id)
+        node_id = self._write(belief, confidence, cycle_num, [r.id for r in results])
 
         return CycleWrite(
             agent=self.name,
@@ -170,7 +173,7 @@ class SocietyAgent:
         belief: str,
         confidence: float,
         cycle_num: int,
-        anchor_node_id: str,
+        result_ids: list[str],
     ) -> str:
         node_id = f"exp_{self.name}_c{cycle_num}_{str(uuid.uuid4())[:6]}"
         self._neo4j.upsert_node(
@@ -184,12 +187,26 @@ class SocietyAgent:
                 "interest": self.interest,
             },
         )
-        # Connect this belief to the most relevant existing node
+        # Add to FAISS so future agents can find this node via semantic search
+        if self._faiss is not None:
+            self._faiss.add(node_id, belief, {
+                "source": self.name, "cluster": "experiment", "cycle": cycle_num,
+            })
+        # Primary anchor: top-ranked result
         self._neo4j.upsert_edge(
-            node_id, anchor_node_id,
+            node_id, result_ids[0],
             relation="DERIVED_FROM",
             weight=confidence,
         )
+        # Secondary edges: any other-agent experiment nodes in the read set
+        # These are the cross-pollination links the observer tracks
+        for rid in result_ids[1:]:
+            if rid.startswith("exp_") and not rid.startswith(f"exp_{self.name}_"):
+                self._neo4j.upsert_edge(
+                    node_id, rid,
+                    relation="DERIVED_FROM",
+                    weight=confidence * 0.8,
+                )
         self.memory.node_ids.append(node_id)
         self.memory.cycle_writes.setdefault(cycle_num, []).append(node_id)
         return node_id
