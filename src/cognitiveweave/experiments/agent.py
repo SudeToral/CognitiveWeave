@@ -192,20 +192,25 @@ class SocietyAgent:
             self._faiss.add(node_id, belief, {
                 "source": self.name, "cluster": "experiment", "cycle": cycle_num,
             })
-        # Primary anchor: top-ranked result
-        self._neo4j.upsert_edge(
-            node_id, result_ids[0],
-            relation="DERIVED_FROM",
-            weight=confidence,
-        )
-        # Secondary edges: any other-agent experiment nodes in the read set
-        # These are the cross-pollination links the observer tracks
-        for rid in result_ids[1:]:
-            if rid.startswith("exp_") and not rid.startswith(f"exp_{self.name}_"):
+        # Anchor edges: all retrieved nodes get DERIVED_FROM edges
+        # Base nodes get weighted by rank; experiment nodes from other agents
+        # get secondary edges (cross-pollination signal)
+        for rank, rid in enumerate(result_ids):
+            if rid.startswith("exp_"):
+                # Cross-pollination: only other agents' experiment nodes
+                if not rid.startswith(f"exp_{self.name}_"):
+                    self._neo4j.upsert_edge(
+                        node_id, rid,
+                        relation="DERIVED_FROM",
+                        weight=confidence * 0.8,
+                    )
+            else:
+                # Base knowledge node — weight decays with rank
+                rank_weight = confidence * (1.0 / (1.0 + rank * 0.3))
                 self._neo4j.upsert_edge(
                     node_id, rid,
                     relation="DERIVED_FROM",
-                    weight=confidence * 0.8,
+                    weight=rank_weight,
                 )
         self.memory.node_ids.append(node_id)
         self.memory.cycle_writes.setdefault(cycle_num, []).append(node_id)

@@ -1,0 +1,319 @@
+{
+  "saved_at": "20260314_175359",
+  "label": "consensus_fix_v3",
+  "agent_presets": [
+    {
+      "name": "Mira",
+      "interest": "memory consolidation and the role of the hippocampus in sleep",
+      "seed": "c3_hippocampus",
+      "color": "#89b4fa"
+    },
+    {
+      "name": "Kael",
+      "interest": "attention mechanisms in transformer models and knowledge retrieval",
+      "seed": "c4_attention",
+      "color": "#a6e3a1"
+    },
+    {
+      "name": "Sova",
+      "interest": "forgetting curves and long-term memory retention strategies",
+      "seed": "c2_ebbinghaus",
+      "color": "#fab387"
+    }
+  ],
+  "total_cycles": 5,
+  "snapshots": [
+    {
+      "cycle": 0,
+      "node_counts": {
+        "Mira": 1,
+        "Kael": 1,
+        "Sova": 1
+      },
+      "avg_confidence": {
+        "Mira": 0.95,
+        "Kael": 0.9,
+        "Sova": 0.9
+      },
+      "total_nodes": 3,
+      "consensus_anchors": [
+        "c1_consolidation",
+        "c3_pfc",
+        "c1_ltp"
+      ],
+      "cross_reads": {
+        "Mira": 0,
+        "Kael": 0,
+        "Sova": 1
+      }
+    },
+    {
+      "cycle": 1,
+      "node_counts": {
+        "Mira": 2,
+        "Kael": 2,
+        "Sova": 2
+      },
+      "avg_confidence": {
+        "Mira": 0.95,
+        "Kael": 0.9,
+        "Sova": 0.9
+      },
+      "total_nodes": 6,
+      "consensus_anchors": [
+        "c1_consolidation",
+        "c3_pfc",
+        "c1_ltp"
+      ],
+      "cross_reads": {
+        "Mira": 1,
+        "Kael": 0,
+        "Sova": 3
+      }
+    },
+    {
+      "cycle": 2,
+      "node_counts": {
+        "Mira": 3,
+        "Kael": 3,
+        "Sova": 3
+      },
+      "avg_confidence": {
+        "Mira": 0.95,
+        "Kael": 0.9166666666666666,
+        "Sova": 0.9
+      },
+      "total_nodes": 9,
+      "consensus_anchors": [
+        "c1_consolidation",
+        "c3_pfc",
+        "c1_ltp"
+      ],
+      "cross_reads": {
+        "Mira": 2,
+        "Kael": 0,
+        "Sova": 6
+      }
+    },
+    {
+      "cycle": 3,
+      "node_counts": {
+        "Mira": 4,
+        "Kael": 4,
+        "Sova": 4
+      },
+      "avg_confidence": {
+        "Mira": 0.95,
+        "Kael": 0.9249999999999999,
+        "Sova": 0.9
+      },
+      "total_nodes": 12,
+      "consensus_anchors": [
+        "c1_consolidation",
+        "c3_pfc",
+        "c1_ltp"
+      ],
+      "cross_reads": {
+        "Mira": 3,
+        "Kael": 0,
+        "Sova": 10
+      }
+    },
+    {
+      "cycle": 4,
+      "node_counts": {
+        "Mira": 5,
+        "Kael": 5,
+        "Sova": 5
+      },
+      "avg_confidence": {
+        "Mira": 0.95,
+        "Kael": 0.9299999999999999,
+        "Sova": 0.91
+      },
+      "total_nodes": 15,
+      "consensus_anchors": [
+        "c1_ltp",
+        "c3_pfc",
+        "c1_consolidation"
+      ],
+      "cross_reads": {
+        "Mira": 4,
+        "Kael": 0,
+        "Sova": 15
+      }
+    }
+  ],
+  "belief_log": [
+    {
+      "id": "exp_Mira_c0_ef9b11",
+      "content": "Memory consolidation involves the hippocampus stabilizing newly encoded memories through synaptic changes and systems-level reorganization during sleep, with contributions from other brain regions such as the prefrontal cortex for strategic retrieval and the default mode network for self-referential thought.",
+      "source": "Mira",
+      "confidence": 0.95,
+      "cycle": 0,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c0_ea9b88",
+      "content": "Transformer attention mechanisms in deep learning models resemble associative memory networks like the Hopfield model, suggesting they could be used to efficiently store and retrieve complex knowledge structures similar to semantic networks.",
+      "source": "Kael",
+      "confidence": 0.9,
+      "cycle": 0,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c0_c46da7",
+      "content": "Memory retention can be improved through strategies like retrieval practice and the spacing effect, while mechanisms such as sharp-wave ripples during NREM sleep play a crucial role in consolidating memories over long periods by replaying and synchronizing with cortical activity.",
+      "source": "Sova",
+      "confidence": 0.9,
+      "cycle": 0,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Mira_c1_e460eb",
+      "content": "Memory consolidation primarily occurs in the hippocampus through synaptic changes stabilized during sleep, involving the integration of information from other brain regions like the prefrontal cortex for strategic retrieval and the entorhinal cortex for direct input. The process is enhanced by sharp-wave ripples during NREM sleep which replay and synchronize with cortical activity, while engram fo",
+      "source": "Mira",
+      "confidence": 0.95,
+      "cycle": 1,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c1_ee54d7",
+      "content": "Transformer attention mechanisms in deep learning models are inspired by associative memory networks like the Hopfield model, suggesting they can efficiently store and retrieve complex knowledge structures similar to semantic networks through a combination of selective attention and key-value caching.",
+      "source": "Kael",
+      "confidence": 0.9,
+      "cycle": 1,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c1_9a9d1f",
+      "content": "Memory retention can be improved through strategies like retrieval practice and the spacing effect, while mechanisms such as sharp-wave ripples during NREM sleep play a crucial role in consolidating memories over long periods by replaying and synchronizing with cortical activity.",
+      "source": "Sova",
+      "confidence": 0.9,
+      "cycle": 1,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Mira_c2_5b5118",
+      "content": "Memory consolidation primarily occurs in the hippocampus through synaptic changes stabilized during sleep, with contributions from other brain regions like the prefrontal cortex for strategic retrieval and the entorhinal cortex for direct input, while mechanisms such as sharp-wave ripples enhance memory retention over long periods by replaying and synchronizing with cortical activity.",
+      "source": "Mira",
+      "confidence": 0.95,
+      "cycle": 2,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c2_da6587",
+      "content": "Transformer attention mechanisms in deep learning models are inspired by associative memory networks like the Hopfield model and can efficiently store and retrieve complex knowledge structures similar to semantic networks through selective attention and key-value caching.",
+      "source": "Kael",
+      "confidence": 0.95,
+      "cycle": 2,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c2_96112b",
+      "content": "Memory retention can be significantly improved through strategies like retrieval practice, spaced learning intervals, and consolidation mechanisms such as sharp-wave ripples during NREM sleep, which replay memories to synchronize with cortical activity for stable memory storage.",
+      "source": "Sova",
+      "confidence": 0.9,
+      "cycle": 2,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Mira_c3_3222ff",
+      "content": "Memory consolidation primarily occurs in the hippocampus through synaptic changes stabilized during sleep, with contributions from other brain regions such as the prefrontal cortex for strategic retrieval and the entorhinal cortex for direct input, while mechanisms like sharp-wave ripples enhance this process by replaying and synchronizing with cortical activity.",
+      "source": "Mira",
+      "confidence": 0.95,
+      "cycle": 3,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c3_73ce0e",
+      "content": "Transformer attention mechanisms in deep learning models are inspired by associative memory networks like the Hopfield model and can efficiently store and retrieve complex knowledge structures similar to semantic networks through selective attention and key-value caching, mirroring human-like cognitive processes such as priming and task-relevant information filtering.",
+      "source": "Kael",
+      "confidence": 0.95,
+      "cycle": 3,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c3_7a5d85",
+      "content": "Memory retention can be significantly improved through strategies like retrieval practice, spaced learning intervals, and consolidation mechanisms such as sharp-wave ripples during NREM sleep, which replay memories to synchronize with cortical activity for stable memory storage.",
+      "source": "Sova",
+      "confidence": 0.9,
+      "cycle": 3,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Mira_c4_2a5ac4",
+      "content": "Memory consolidation primarily occurs in the hippocampus through synaptic changes stabilized during sleep, involving contributions from other brain regions like the prefrontal cortex for strategic retrieval and the entorhinal cortex for direct input, while mechanisms such as sharp-wave ripples enhance this process.",
+      "source": "Mira",
+      "confidence": 0.95,
+      "cycle": 4,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c4_1c8722",
+      "content": "Transformer attention mechanisms in deep learning models are inspired by associative memory networks like the Hopfield model and can efficiently store and retrieve complex knowledge structures similar to semantic networks through selective attention and key-value caching, mirroring human-like cognitive processes.",
+      "source": "Kael",
+      "confidence": 0.95,
+      "cycle": 4,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c4_596684",
+      "content": "Memory retention and consolidation are enhanced through strategies like retrieval practice and spaced learning intervals, with mechanisms such as sharp-wave ripples during NREM sleep playing a crucial role in replaying memories to synchronize with cortical activity for stable storage over long periods.",
+      "source": "Sova",
+      "confidence": 0.95,
+      "cycle": 4,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    }
+  ],
+  "drift_series": {
+    "Mira": {
+      "cycles": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "distances": [
+        -1.1920928955078125e-07,
+        0.1534215211868286,
+        0.12516576051712036,
+        0.11583495140075684,
+        0.1145523190498352
+      ]
+    },
+    "Kael": {
+      "cycles": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "distances": [
+        0.0,
+        0.04136931896209717,
+        0.05130195617675781,
+        0.0718732476234436,
+        0.06061816215515137
+      ]
+    },
+    "Sova": {
+      "cycles": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "distances": [
+        0.0,
+        0.0,
+        0.04187881946563721,
+        0.04187881946563721,
+        0.047493040561676025
+      ]
+    }
+  }
+}

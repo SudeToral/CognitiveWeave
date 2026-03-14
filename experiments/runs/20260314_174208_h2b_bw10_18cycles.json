@@ -1,0 +1,949 @@
+{
+  "saved_at": "20260314_174208",
+  "label": "h2b_bw10_18cycles",
+  "agent_presets": [
+    {
+      "name": "Mira",
+      "interest": "memory consolidation and the role of the hippocampus in sleep",
+      "seed": "c3_hippocampus",
+      "color": "#89b4fa"
+    },
+    {
+      "name": "Kael",
+      "interest": "attention mechanisms in transformer models and knowledge retrieval",
+      "seed": "c4_attention",
+      "color": "#a6e3a1"
+    },
+    {
+      "name": "Sova",
+      "interest": "forgetting curves and long-term memory retention strategies",
+      "seed": "c2_ebbinghaus",
+      "color": "#fab387"
+    }
+  ],
+  "total_cycles": 18,
+  "snapshots": [
+    {
+      "cycle": 0,
+      "node_counts": {
+        "Mira": 1,
+        "Kael": 1,
+        "Sova": 1
+      },
+      "avg_confidence": {
+        "Mira": 0.95,
+        "Kael": 0.9,
+        "Sova": 0.9
+      },
+      "total_nodes": 3,
+      "consensus_anchors": [],
+      "cross_reads": {
+        "Mira": 0,
+        "Kael": 0,
+        "Sova": 1
+      }
+    },
+    {
+      "cycle": 1,
+      "node_counts": {
+        "Mira": 2,
+        "Kael": 2,
+        "Sova": 2
+      },
+      "avg_confidence": {
+        "Mira": 0.925,
+        "Kael": 0.925,
+        "Sova": 0.9
+      },
+      "total_nodes": 6,
+      "consensus_anchors": [],
+      "cross_reads": {
+        "Mira": 0,
+        "Kael": 0,
+        "Sova": 3
+      }
+    },
+    {
+      "cycle": 2,
+      "node_counts": {
+        "Mira": 3,
+        "Kael": 3,
+        "Sova": 3
+      },
+      "avg_confidence": {
+        "Mira": 0.9333333333333333,
+        "Kael": 0.9333333333333333,
+        "Sova": 0.9
+      },
+      "total_nodes": 9,
+      "consensus_anchors": [],
+      "cross_reads": {
+        "Mira": 0,
+        "Kael": 0,
+        "Sova": 6
+      }
+    },
+    {
+      "cycle": 3,
+      "node_counts": {
+        "Mira": 4,
+        "Kael": 4,
+        "Sova": 4
+      },
+      "avg_confidence": {
+        "Mira": 0.9375,
+        "Kael": 0.9375,
+        "Sova": 0.9
+      },
+      "total_nodes": 12,
+      "consensus_anchors": [],
+      "cross_reads": {
+        "Mira": 0,
+        "Kael": 0,
+        "Sova": 9
+      }
+    },
+    {
+      "cycle": 4,
+      "node_counts": {
+        "Mira": 5,
+        "Kael": 5,
+        "Sova": 5
+      },
+      "avg_confidence": {
+        "Mira": 0.94,
+        "Kael": 0.94,
+        "Sova": 0.91
+      },
+      "total_nodes": 15,
+      "consensus_anchors": [],
+      "cross_reads": {
+        "Mira": 0,
+        "Kael": 0,
+        "Sova": 13
+      }
+    },
+    {
+      "cycle": 5,
+      "node_counts": {
+        "Mira": 6,
+        "Kael": 6,
+        "Sova": 6
+      },
+      "avg_confidence": {
+        "Mira": 0.9333333333333333,
+        "Kael": 0.9416666666666667,
+        "Sova": 0.9083333333333333
+      },
+      "total_nodes": 18,
+      "consensus_anchors": [],
+      "cross_reads": {
+        "Mira": 1,
+        "Kael": 0,
+        "Sova": 17
+      }
+    },
+    {
+      "cycle": 6,
+      "node_counts": {
+        "Mira": 7,
+        "Kael": 7,
+        "Sova": 7
+      },
+      "avg_confidence": {
+        "Mira": 0.9357142857142857,
+        "Kael": 0.9428571428571428,
+        "Sova": 0.9071428571428571
+      },
+      "total_nodes": 21,
+      "consensus_anchors": [],
+      "cross_reads": {
+        "Mira": 2,
+        "Kael": 0,
+        "Sova": 21
+      }
+    },
+    {
+      "cycle": 7,
+      "node_counts": {
+        "Mira": 8,
+        "Kael": 8,
+        "Sova": 8
+      },
+      "avg_confidence": {
+        "Mira": 0.9375,
+        "Kael": 0.94375,
+        "Sova": 0.90625
+      },
+      "total_nodes": 24,
+      "consensus_anchors": [],
+      "cross_reads": {
+        "Mira": 3,
+        "Kael": 0,
+        "Sova": 25
+      }
+    },
+    {
+      "cycle": 8,
+      "node_counts": {
+        "Mira": 9,
+        "Kael": 9,
+        "Sova": 9
+      },
+      "avg_confidence": {
+        "Mira": 0.9388888888888889,
+        "Kael": 0.9444444444444444,
+        "Sova": 0.9055555555555556
+      },
+      "total_nodes": 27,
+      "consensus_anchors": [],
+      "cross_reads": {
+        "Mira": 3,
+        "Kael": 0,
+        "Sova": 29
+      }
+    },
+    {
+      "cycle": 9,
+      "node_counts": {
+        "Mira": 10,
+        "Kael": 10,
+        "Sova": 10
+      },
+      "avg_confidence": {
+        "Mira": 0.94,
+        "Kael": 0.945,
+        "Sova": 0.91
+      },
+      "total_nodes": 30,
+      "consensus_anchors": [],
+      "cross_reads": {
+        "Mira": 4,
+        "Kael": 0,
+        "Sova": 33
+      }
+    },
+    {
+      "cycle": 10,
+      "node_counts": {
+        "Mira": 11,
+        "Kael": 11,
+        "Sova": 11
+      },
+      "avg_confidence": {
+        "Mira": 0.9454545454545454,
+        "Kael": 0.9454545454545454,
+        "Sova": 0.9136363636363637
+      },
+      "total_nodes": 33,
+      "consensus_anchors": [],
+      "cross_reads": {
+        "Mira": 4,
+        "Kael": 0,
+        "Sova": 37
+      }
+    },
+    {
+      "cycle": 11,
+      "node_counts": {
+        "Mira": 12,
+        "Kael": 12,
+        "Sova": 12
+      },
+      "avg_confidence": {
+        "Mira": 0.95,
+        "Kael": 0.9458333333333333,
+        "Sova": 0.9125000000000001
+      },
+      "total_nodes": 36,
+      "consensus_anchors": [],
+      "cross_reads": {
+        "Mira": 4,
+        "Kael": 0,
+        "Sova": 41
+      }
+    },
+    {
+      "cycle": 12,
+      "node_counts": {
+        "Mira": 13,
+        "Kael": 13,
+        "Sova": 13
+      },
+      "avg_confidence": {
+        "Mira": 0.9538461538461538,
+        "Kael": 0.9461538461538461,
+        "Sova": 0.9153846153846155
+      },
+      "total_nodes": 39,
+      "consensus_anchors": [],
+      "cross_reads": {
+        "Mira": 4,
+        "Kael": 0,
+        "Sova": 45
+      }
+    },
+    {
+      "cycle": 13,
+      "node_counts": {
+        "Mira": 14,
+        "Kael": 14,
+        "Sova": 14
+      },
+      "avg_confidence": {
+        "Mira": 0.9571428571428571,
+        "Kael": 0.9464285714285714,
+        "Sova": 0.9178571428571429
+      },
+      "total_nodes": 42,
+      "consensus_anchors": [],
+      "cross_reads": {
+        "Mira": 4,
+        "Kael": 0,
+        "Sova": 49
+      }
+    },
+    {
+      "cycle": 14,
+      "node_counts": {
+        "Mira": 15,
+        "Kael": 15,
+        "Sova": 15
+      },
+      "avg_confidence": {
+        "Mira": 0.96,
+        "Kael": 0.9466666666666667,
+        "Sova": 0.9166666666666667
+      },
+      "total_nodes": 45,
+      "consensus_anchors": [],
+      "cross_reads": {
+        "Mira": 4,
+        "Kael": 0,
+        "Sova": 53
+      }
+    },
+    {
+      "cycle": 15,
+      "node_counts": {
+        "Mira": 16,
+        "Kael": 16,
+        "Sova": 16
+      },
+      "avg_confidence": {
+        "Mira": 0.9624999999999999,
+        "Kael": 0.946875,
+        "Sova": 0.9187500000000001
+      },
+      "total_nodes": 48,
+      "consensus_anchors": [],
+      "cross_reads": {
+        "Mira": 4,
+        "Kael": 0,
+        "Sova": 57
+      }
+    },
+    {
+      "cycle": 16,
+      "node_counts": {
+        "Mira": 17,
+        "Kael": 17,
+        "Sova": 17
+      },
+      "avg_confidence": {
+        "Mira": 0.9647058823529411,
+        "Kael": 0.9470588235294117,
+        "Sova": 0.9176470588235295
+      },
+      "total_nodes": 51,
+      "consensus_anchors": [],
+      "cross_reads": {
+        "Mira": 4,
+        "Kael": 0,
+        "Sova": 61
+      }
+    },
+    {
+      "cycle": 17,
+      "node_counts": {
+        "Mira": 18,
+        "Kael": 18,
+        "Sova": 18
+      },
+      "avg_confidence": {
+        "Mira": 0.9666666666666666,
+        "Kael": 0.9444444444444444,
+        "Sova": 0.9194444444444445
+      },
+      "total_nodes": 54,
+      "consensus_anchors": [],
+      "cross_reads": {
+        "Mira": 4,
+        "Kael": 0,
+        "Sova": 65
+      }
+    }
+  ],
+  "belief_log": [
+    {
+      "id": "exp_Mira_c0_92ddd7",
+      "content": "Memory consolidation involves stabilizing newly encoded memories through processes that occur primarily during sleep, with the hippocampus playing a crucial role in this process.",
+      "source": "Mira",
+      "confidence": 0.95,
+      "cycle": 0,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c0_0aff19",
+      "content": "Transformer attention mechanisms in deep learning models share conceptual similarities with cognitive processes like selective attention and priming, facilitating efficient knowledge retrieval and processing by parallelizing sequence information and using activation spreading to manage relevant data.",
+      "source": "Kael",
+      "confidence": 0.9,
+      "cycle": 0,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c0_2123c7",
+      "content": "Forgetting curves demonstrate that frequent retrieval practice and effective memory consolidation strategies can improve long-term retention of information without significant forgetting over time.",
+      "source": "Sova",
+      "confidence": 0.9,
+      "cycle": 0,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Mira_c1_96029d",
+      "content": "The hippocampus is critical for memory consolidation, particularly during sleep, by stabilizing new memories at both synaptic and systems levels.",
+      "source": "Mira",
+      "confidence": 0.9,
+      "cycle": 1,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c1_0aa3e9",
+      "content": "Transformer attention mechanisms in deep learning models share conceptual similarities with cognitive processes like selective attention and priming, enabling efficient parallel processing of sequence information for knowledge retrieval.",
+      "source": "Kael",
+      "confidence": 0.95,
+      "cycle": 1,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c1_b130a0",
+      "content": "Memory retention can be improved through effective strategies such as retrieval practice and appropriate memory consolidation techniques involving frequent recall and proper sleep cycles, which utilize the hippocampus to stabilize new memories without significant forgetting over time.",
+      "source": "Sova",
+      "confidence": 0.9,
+      "cycle": 1,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Mira_c2_ff5567",
+      "content": "The hippocampus plays a crucial role in memory consolidation, especially during sleep, by stabilizing new memories through processes that occur primarily at both the synaptic and systems levels.",
+      "source": "Mira",
+      "confidence": 0.95,
+      "cycle": 2,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c2_8b3683",
+      "content": "Transformer attention mechanisms in deep learning models leverage cognitive processes like selective attention and priming to efficiently manage sequence data and retrieve relevant information, similar to how the human brain operates.",
+      "source": "Kael",
+      "confidence": 0.95,
+      "cycle": 2,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c2_209789",
+      "content": "Memory retention strategies like retrieval practice and effective memory consolidation through the hippocampus' role in stabilizing new memories can prevent forgetting over time without significant loss of previously acquired knowledge.",
+      "source": "Sova",
+      "confidence": 0.9,
+      "cycle": 2,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Mira_c3_d39ce7",
+      "content": "The hippocampus is essential for memory consolidation, especially during sleep, as it stabilizes new memories through processes occurring primarily at the synaptic and systems levels.",
+      "source": "Mira",
+      "confidence": 0.95,
+      "cycle": 3,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c3_964598",
+      "content": "Transformer attention mechanisms in deep learning models leverage conceptual similarities with cognitive processes like selective attention and priming to efficiently manage sequence information and facilitate parallel processing, akin to the way humans prioritize relevant data for knowledge retrieval.",
+      "source": "Kael",
+      "confidence": 0.95,
+      "cycle": 3,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c3_1ef739",
+      "content": "Memory retention can be improved through retrieval practice and effective long-term consolidation strategies that leverage the role of the hippocampus in stabilizing new memories, particularly through processes occurring primarily at the synaptic and systems levels during sleep.",
+      "source": "Sova",
+      "confidence": 0.9,
+      "cycle": 3,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Mira_c4_7e5c71",
+      "content": "The hippocampus plays a crucial role in memory consolidation, especially during sleep, by stabilizing new memories through processes occurring primarily at the synaptic and systems levels.",
+      "source": "Mira",
+      "confidence": 0.95,
+      "cycle": 4,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c4_2045a4",
+      "content": "Transformer attention mechanisms in deep learning models utilize conceptual similarities to cognitive processes like selective attention and priming, enabling efficient knowledge retrieval and processing by parallelizing sequence information and using activation spreading to manage relevant data.",
+      "source": "Kael",
+      "confidence": 0.95,
+      "cycle": 4,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c4_f5f923",
+      "content": "The hippocampus is essential for memory consolidation, especially during sleep, as it stabilizes new memories through processes that occur primarily at the synaptic and systems levels.",
+      "source": "Sova",
+      "confidence": 0.95,
+      "cycle": 4,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Mira_c5_f860e4",
+      "content": "The hippocampus plays a crucial role in memory consolidation, especially during sleep, by stabilizing new memories through processes that occur primarily at both the synaptic and systems levels.",
+      "source": "Mira",
+      "confidence": 0.9,
+      "cycle": 5,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c5_4dd72d",
+      "content": "Transformer attention mechanisms in deep learning models parallel cognitive processes like selective attention and priming by managing relevant data efficiently through parallel processing of sequences and activation spreading, facilitating effective knowledge retrieval and processing.",
+      "source": "Kael",
+      "confidence": 0.95,
+      "cycle": 5,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c5_c47151",
+      "content": "The hippocampus is essential for memory consolidation, especially during sleep, as it stabilizes new memories through processes occurring primarily at the synaptic and systems levels, which can improve long-term retention of information without significant forgetting over time through strategies like retrieval practice.",
+      "source": "Sova",
+      "confidence": 0.9,
+      "cycle": 5,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Mira_c6_10d9f9",
+      "content": "The hippocampus plays a crucial role in memory consolidation, especially during sleep, by stabilizing new memories through processes that occur primarily at the synaptic and systems levels.",
+      "source": "Mira",
+      "confidence": 0.95,
+      "cycle": 6,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c6_e15804",
+      "content": "Transformer attention mechanisms in deep learning models leverage conceptual similarities with cognitive processes like selective attention and priming to efficiently manage relevant data retrieval through parallel processing and context-dependent representations.",
+      "source": "Kael",
+      "confidence": 0.95,
+      "cycle": 6,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c6_4efdf2",
+      "content": "The hippocampus is essential for memory consolidation, especially during sleep, as it stabilizes new memories through processes that occur primarily at the synaptic and systems levels, which can be enhanced by regular retrieval practice and effective memory retention strategies such as active recall and adequate sleep.",
+      "source": "Sova",
+      "confidence": 0.9,
+      "cycle": 6,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Mira_c7_563c56",
+      "content": "The hippocampus plays a crucial role in memory consolidation, especially during sleep, by stabilizing new memories through processes occurring primarily at both the synaptic and systems levels.",
+      "source": "Mira",
+      "confidence": 0.95,
+      "cycle": 7,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c7_b3debd",
+      "content": "Transformer attention mechanisms in deep learning models leverage cognitive processes like selective attention and priming for efficient knowledge retrieval and processing by parallelizing sequence information and managing relevant data through activation spreading, key-value caching, and in-context learning.",
+      "source": "Kael",
+      "confidence": 0.95,
+      "cycle": 7,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c7_d6ca2d",
+      "content": "The hippocampus is essential for memory consolidation, especially during sleep, as it stabilizes new memories through processes occurring primarily at the synaptic and systems levels, which can be reinforced using strategies like retrieval practice to improve long-term retention without significant forgetting over time.",
+      "source": "Sova",
+      "confidence": 0.9,
+      "cycle": 7,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Mira_c8_ce15da",
+      "content": "The hippocampus plays a crucial role in memory consolidation, especially during sleep, by stabilizing new memories through processes that occur primarily at both the synaptic and systems levels.",
+      "source": "Mira",
+      "confidence": 0.95,
+      "cycle": 8,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c8_799092",
+      "content": "Transformer attention mechanisms in deep learning models parallel cognitive processes like selective attention and priming by managing context-dependent representations and facilitating efficient retrieval of relevant information through parallel processing and activation spreading.",
+      "source": "Kael",
+      "confidence": 0.95,
+      "cycle": 8,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c8_6cdc8a",
+      "content": "The hippocampus is essential for memory consolidation, especially during sleep, as it stabilizes new memories through processes occurring primarily at the synaptic and systems levels.",
+      "source": "Sova",
+      "confidence": 0.9,
+      "cycle": 8,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Mira_c9_b284e0",
+      "content": "The hippocampus plays a crucial role in memory consolidation, especially during sleep, by stabilizing new memories through processes that occur primarily at both the synaptic and systems levels.",
+      "source": "Mira",
+      "confidence": 0.95,
+      "cycle": 9,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c9_aa0286",
+      "content": "Transformer attention mechanisms in deep learning models draw conceptual parallels to cognitive processes like selective attention and priming, enabling efficient parallel processing and context-dependent knowledge retrieval.",
+      "source": "Kael",
+      "confidence": 0.95,
+      "cycle": 9,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c9_b1d0b1",
+      "content": "The hippocampus is essential for memory consolidation, especially during sleep, as it stabilizes new memories through processes occurring primarily at the synaptic and systems levels.",
+      "source": "Sova",
+      "confidence": 0.95,
+      "cycle": 9,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Mira_c10_6bf6f7",
+      "content": "The hippocampus plays a crucial role in memory consolidation especially during sleep by stabilizing new memories through processes occurring primarily at both the synaptic and systems levels.",
+      "source": "Mira",
+      "confidence": 1.0,
+      "cycle": 10,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c10_8a8d07",
+      "content": "Transformer attention mechanisms in deep learning models leverage cognitive processes like selective attention and priming by parallelizing sequence information and using activation spreading to manage relevant data for efficient knowledge retrieval.",
+      "source": "Kael",
+      "confidence": 0.95,
+      "cycle": 10,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c10_836ee4",
+      "content": "The hippocampus is essential for memory consolidation, especially during sleep, as it stabilizes new memories through processes occurring primarily at the synaptic and systems levels.",
+      "source": "Sova",
+      "confidence": 0.95,
+      "cycle": 10,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Mira_c11_e099b5",
+      "content": "The hippocampus plays a crucial role in memory consolidation, especially during sleep, by stabilizing new memories through processes that occur primarily at both the synaptic and systems levels.",
+      "source": "Mira",
+      "confidence": 1.0,
+      "cycle": 11,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c11_64c501",
+      "content": "Transformer attention mechanisms in deep learning, inspired by cognitive processes such as selective attention and priming, efficiently manage relevant data through parallelized processing and activation spreading, thereby facilitating effective knowledge retrieval.",
+      "source": "Kael",
+      "confidence": 0.95,
+      "cycle": 11,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c11_e3344a",
+      "content": "The hippocampus is essential for memory consolidation, especially during sleep, as it stabilizes new memories through processes that occur primarily at the synaptic and systems levels.",
+      "source": "Sova",
+      "confidence": 0.9,
+      "cycle": 11,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Mira_c12_d05d26",
+      "content": "The hippocampus plays a crucial role in memory consolidation especially during sleep by stabilizing new memories through processes that occur primarily at both the synaptic and systems levels.",
+      "source": "Mira",
+      "confidence": 1.0,
+      "cycle": 12,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c12_0fe70e",
+      "content": "Transformer attention mechanisms in deep learning models leverage cognitive processes like selective attention and priming by parallelizing sequence information and using activation spreading to efficiently manage relevant data for effective knowledge retrieval.",
+      "source": "Kael",
+      "confidence": 0.95,
+      "cycle": 12,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c12_7ff5a0",
+      "content": "The hippocampus is essential for memory consolidation, especially during sleep, as it stabilizes new memories through processes that occur primarily at the synaptic and systems levels.",
+      "source": "Sova",
+      "confidence": 0.95,
+      "cycle": 12,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Mira_c13_a22519",
+      "content": "The hippocampus plays a crucial role in memory consolidation, especially during sleep, by stabilizing new memories through processes occurring primarily at both the synaptic and systems levels.",
+      "source": "Mira",
+      "confidence": 1.0,
+      "cycle": 13,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c13_2b0117",
+      "content": "Transformer attention mechanisms in deep learning models leverage cognitive processes like selective attention and priming by parallelizing sequence information and using activation spreading, thereby efficiently managing and retrieving relevant data.",
+      "source": "Kael",
+      "confidence": 0.95,
+      "cycle": 13,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c13_b1ae5d",
+      "content": "The hippocampus is essential for memory consolidation, especially during sleep, as it stabilizes new memories through processes occurring primarily at the synaptic and systems levels.",
+      "source": "Sova",
+      "confidence": 0.95,
+      "cycle": 13,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Mira_c14_77b062",
+      "content": "The hippocampus plays a crucial role in memory consolidation, especially during sleep, by stabilizing new memories through processes occurring primarily at both the synaptic and systems levels.",
+      "source": "Mira",
+      "confidence": 1.0,
+      "cycle": 14,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c14_4c6257",
+      "content": "Transformer attention mechanisms in deep learning models effectively manage relevant data for efficient knowledge retrieval through conceptual similarities with cognitive processes like selective attention and priming, enabling parallelized sequence processing and utilizing activation spreading.",
+      "source": "Kael",
+      "confidence": 0.95,
+      "cycle": 14,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c14_9377af",
+      "content": "The hippocampus is essential for memory consolidation, especially during sleep, by stabilizing new memories through processes occurring primarily at the synaptic and systems levels, and strategies like retrieval practice can improve long-term retention of information without significant forgetting.",
+      "source": "Sova",
+      "confidence": 0.9,
+      "cycle": 14,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Mira_c15_24480f",
+      "content": "The hippocampus plays a crucial role in memory consolidation, especially during sleep, by stabilizing new memories through processes occurring primarily at both the synaptic and systems levels.",
+      "source": "Mira",
+      "confidence": 1.0,
+      "cycle": 15,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c15_a92519",
+      "content": "Transformer attention mechanisms in deep learning models effectively manage relevant data for efficient knowledge retrieval through conceptual similarities with cognitive processes like selective attention and priming, enabling parallelized sequence processing and utilizing activation spreading.",
+      "source": "Kael",
+      "confidence": 0.95,
+      "cycle": 15,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c15_d9ca1d",
+      "content": "The hippocampus is essential for memory consolidation, especially during sleep, as it stabilizes new memories through processes occurring primarily at the synaptic and systems levels.",
+      "source": "Sova",
+      "confidence": 0.95,
+      "cycle": 15,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Mira_c16_8e84dc",
+      "content": "The hippocampus plays a crucial role in memory consolidation, especially during sleep, by stabilizing new memories through processes occurring primarily at both the synaptic and systems levels.",
+      "source": "Mira",
+      "confidence": 1.0,
+      "cycle": 16,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c16_d7708e",
+      "content": "Transformer attention mechanisms in deep learning models effectively manage relevant data for efficient knowledge retrieval through conceptual similarities with cognitive processes like selective attention and priming, enabling parallelized sequence processing and utilizing activation spreading.",
+      "source": "Kael",
+      "confidence": 0.95,
+      "cycle": 16,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c16_04996f",
+      "content": "The hippocampus is essential for memory consolidation, especially during sleep, as it stabilizes new memories through processes occurring primarily at the synaptic and systems levels, which can improve long-term retention of information without significant forgetting over time.",
+      "source": "Sova",
+      "confidence": 0.9,
+      "cycle": 16,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Mira_c17_0e284b",
+      "content": "The hippocampus plays a crucial role in memory consolidation, especially during sleep, by stabilizing new memories through processes occurring primarily at both the synaptic and systems levels.",
+      "source": "Mira",
+      "confidence": 1.0,
+      "cycle": 17,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c17_7388f2",
+      "content": "Transformer attention mechanisms in deep learning models effectively manage relevant data for efficient knowledge retrieval through conceptual similarities with cognitive processes like selective attention and priming, leveraging parallelized sequence processing and activation spreading.",
+      "source": "Kael",
+      "confidence": 0.9,
+      "cycle": 17,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c17_78b916",
+      "content": "The hippocampus is essential for memory consolidation, especially during sleep, as it stabilizes new memories through processes that occur primarily at the synaptic and systems levels.",
+      "source": "Sova",
+      "confidence": 0.95,
+      "cycle": 17,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    }
+  ],
+  "drift_series": {
+    "Mira": {
+      "cycles": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ],
+      "distances": [
+        0.0,
+        0.0682305097579956,
+        0.03759336471557617,
+        0.07934904098510742,
+        0.03463602066040039,
+        0.03759336471557617,
+        0.03639364242553711,
+        0.03528857231140137,
+        0.03759336471557617,
+        0.03759336471557617,
+        0.03718388080596924,
+        0.03759336471557617,
+        0.03715711832046509,
+        0.03528857231140137,
+        0.03528857231140137,
+        0.03528857231140137,
+        0.03528857231140137,
+        0.03528857231140137
+      ]
+    },
+    "Kael": {
+      "cycles": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ],
+      "distances": [
+        0.0,
+        0.03667384386062622,
+        0.06823372840881348,
+        0.02060830593109131,
+        0.0045160651206970215,
+        0.060044944286346436,
+        0.05584079027175903,
+        0.03700089454650879,
+        0.09506922960281372,
+        0.05841010808944702,
+        0.017162561416625977,
+        0.06003326177597046,
+        0.02401888370513916,
+        0.04110896587371826,
+        0.04284369945526123,
+        0.04284369945526123,
+        0.04284369945526123,
+        0.047308385372161865
+      ]
+    },
+    "Sova": {
+      "cycles": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ],
+      "distances": [
+        0.0,
+        0.2440582513809204,
+        0.17798590660095215,
+        0.33074456453323364,
+        0.4609352946281433,
+        0.32926762104034424,
+        0.40490293502807617,
+        0.34230494499206543,
+        0.4583318829536438,
+        0.4583318829536438,
+        0.4583318829536438,
+        0.4609352946281433,
+        0.4609352946281433,
+        0.4583318829536438,
+        0.27904462814331055,
+        0.4583318829536438,
+        0.375093936920166,
+        0.4609352946281433
+      ]
+    }
+  }
+}

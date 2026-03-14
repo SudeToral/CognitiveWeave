@@ -1,0 +1,349 @@
+{
+  "saved_at": "20260314_172004",
+  "label": "h1_kael_seed_swap",
+  "agent_presets": [
+    {
+      "name": "Mira",
+      "interest": "memory consolidation and the role of the hippocampus in sleep",
+      "seed": "c3_hippocampus",
+      "color": "#89b4fa"
+    },
+    {
+      "name": "Kael",
+      "interest": "attention mechanisms in transformer models and knowledge retrieval",
+      "seed": "c2_ebbinghaus",
+      "color": "#a6e3a1"
+    },
+    {
+      "name": "Sova",
+      "interest": "forgetting curves and long-term memory retention strategies",
+      "seed": "c2_ebbinghaus",
+      "color": "#fab387"
+    }
+  ],
+  "total_cycles": 6,
+  "snapshots": [
+    {
+      "cycle": 0,
+      "node_counts": {
+        "Mira": 1,
+        "Kael": 1,
+        "Sova": 1
+      },
+      "avg_confidence": {
+        "Mira": 0.9,
+        "Kael": 0.9,
+        "Sova": 0.9
+      },
+      "total_nodes": 3,
+      "consensus_anchors": [],
+      "cross_reads": {
+        "Mira": 0,
+        "Kael": 1,
+        "Sova": 1
+      }
+    },
+    {
+      "cycle": 1,
+      "node_counts": {
+        "Mira": 2,
+        "Kael": 2,
+        "Sova": 2
+      },
+      "avg_confidence": {
+        "Mira": 0.925,
+        "Kael": 0.9,
+        "Sova": 0.9
+      },
+      "total_nodes": 6,
+      "consensus_anchors": [],
+      "cross_reads": {
+        "Mira": 0,
+        "Kael": 2,
+        "Sova": 3
+      }
+    },
+    {
+      "cycle": 2,
+      "node_counts": {
+        "Mira": 3,
+        "Kael": 3,
+        "Sova": 3
+      },
+      "avg_confidence": {
+        "Mira": 0.9333333333333333,
+        "Kael": 0.9166666666666666,
+        "Sova": 0.9
+      },
+      "total_nodes": 9,
+      "consensus_anchors": [],
+      "cross_reads": {
+        "Mira": 0,
+        "Kael": 3,
+        "Sova": 6
+      }
+    },
+    {
+      "cycle": 3,
+      "node_counts": {
+        "Mira": 4,
+        "Kael": 4,
+        "Sova": 4
+      },
+      "avg_confidence": {
+        "Mira": 0.925,
+        "Kael": 0.9125,
+        "Sova": 0.9
+      },
+      "total_nodes": 12,
+      "consensus_anchors": [],
+      "cross_reads": {
+        "Mira": 0,
+        "Kael": 4,
+        "Sova": 10
+      }
+    },
+    {
+      "cycle": 4,
+      "node_counts": {
+        "Mira": 5,
+        "Kael": 5,
+        "Sova": 5
+      },
+      "avg_confidence": {
+        "Mira": 0.9199999999999999,
+        "Kael": 0.92,
+        "Sova": 0.9
+      },
+      "total_nodes": 15,
+      "consensus_anchors": [],
+      "cross_reads": {
+        "Mira": 0,
+        "Kael": 5,
+        "Sova": 15
+      }
+    },
+    {
+      "cycle": 5,
+      "node_counts": {
+        "Mira": 6,
+        "Kael": 6,
+        "Sova": 6
+      },
+      "avg_confidence": {
+        "Mira": 0.925,
+        "Kael": 0.9166666666666667,
+        "Sova": 0.9083333333333333
+      },
+      "total_nodes": 18,
+      "consensus_anchors": [],
+      "cross_reads": {
+        "Mira": 0,
+        "Kael": 6,
+        "Sova": 20
+      }
+    }
+  ],
+  "belief_log": [
+    {
+      "id": "exp_Mira_c0_386d0c",
+      "content": "Memory consolidation involves the hippocampus processing and stabilizing new memories through synaptic changes, with the entorhinal cortex and CA3 providing input, and CA1 serving as the main output stage, while the amygdala modulates emotional memory intensity via norepinephrine release in the hippocampus during sleep.",
+      "source": "Mira",
+      "confidence": 0.9,
+      "cycle": 0,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c0_5845f0",
+      "content": "Transformer models use attention mechanisms to selectively focus on relevant input positions for weighted sum of values using query-key similarity scores, similar to consolidation processes where active recall strengthens memory and minimizes forgetting, reflecting both practical applications and theoretical foundations.",
+      "source": "Kael",
+      "confidence": 0.9,
+      "cycle": 0,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c0_6afd32",
+      "content": "Long-term memory retention can be improved through retrieval practice and consolidating memories during sleep phases like NREM slow-wave sleep, while avoiding the detrimental effects of catastrophic forgetting by employing strategies that prevent neural networks from losing old knowledge.",
+      "source": "Sova",
+      "confidence": 0.9,
+      "cycle": 0,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Mira_c1_167ca7",
+      "content": "Memory consolidation involves the hippocampus processing and stabilizing new memories during sleep through synaptic changes and systems-level restructuring, with the hippocampus' CA3 area facilitating pattern completion while CA1 acts as a critical output stage for memory encoding.",
+      "source": "Mira",
+      "confidence": 0.95,
+      "cycle": 1,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c1_48785e",
+      "content": "Transformer models utilize attention mechanisms to selectively focus on relevant input positions, akin to the consolidation process where active recall strengthens memory and minimizes forgetting, drawing parallels with the hippocampus' role in consolidating new memories through synaptic changes and output encoding.",
+      "source": "Kael",
+      "confidence": 0.9,
+      "cycle": 1,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c1_d66bd3",
+      "content": "Forgetting curves indicate that memories decay over time, but strategies such as retrieval practice and continual learning can enhance long-term retention by reinforcing neural connections and preventing catastrophic forgetting.",
+      "source": "Sova",
+      "confidence": 0.9,
+      "cycle": 1,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Mira_c2_5da14b",
+      "content": "Memory consolidation is facilitated by the hippocampus during sleep through synaptic changes, where it receives processed information from CA3 and acts as a crucial output stage for memory encoding, while also supporting prefrontal cortex modulation to ensure accurate source monitoring and retrieval.",
+      "source": "Mira",
+      "confidence": 0.95,
+      "cycle": 2,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c2_0e458d",
+      "content": "Transformer models use attention mechanisms to selectively focus on relevant input positions, similar to how the human hippocampus consolidates new memories by actively recalling information, strengthening them and minimizing forgetting, thus addressing the stability-plasticity dilemma in continual learning.",
+      "source": "Kael",
+      "confidence": 0.95,
+      "cycle": 2,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c2_014ded",
+      "content": "Memory consolidation involves the hippocampus processing and stabilizing new memories through synaptic changes, with inputs from the entorhinal cortex and CA3 area and outputs to the prefrontal cortex for accurate source monitoring and retrieval, while the amygdala modulates emotional memory intensity via norepinephrine release in the hippocampus. Long-term retention strategies like retrieval prac",
+      "source": "Sova",
+      "confidence": 0.9,
+      "cycle": 2,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Mira_c3_0ae9f0",
+      "content": "Memory consolidation is facilitated by the hippocampus through its role in pattern completion and communication with other brain regions such as the CA1, entorhinal cortex, and prefrontal cortex, ultimately stabilizing new memories and integrating them into existing knowledge structures.",
+      "source": "Mira",
+      "confidence": 0.9,
+      "cycle": 3,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c3_e8adfa",
+      "content": "Transformer models' attention mechanisms parallel memory consolidation processes in the brain's hippocampus, focusing selectively on relevant inputs akin to active recall that strengthens memories and minimizes forgetting, thereby addressing the stability-plasticity dilemma.",
+      "source": "Kael",
+      "confidence": 0.9,
+      "cycle": 3,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c3_a88e6e",
+      "content": "Memory consolidation involves the hippocampus processing and stabilizing new memories through synaptic changes during sleep, while also receiving input from the entorhinal cortex and CA3 areas, with output from the CA1 area ensuring accurate memory encoding, alongside modulating effects of the amygdala on emotional memory intensity. This process helps in retaining long-term memory without catastro",
+      "source": "Sova",
+      "confidence": 0.9,
+      "cycle": 3,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Mira_c4_e9fe14",
+      "content": "Memory consolidation involves the hippocampus stabilizing new memories through synaptic changes, then integrating them with existing information via CA3's recurrent connections during sleep, while the prefrontal cortex regulates this process for efficient retrieval and storage.",
+      "source": "Mira",
+      "confidence": 0.9,
+      "cycle": 4,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c4_6539fd",
+      "content": "Transformer models' attention mechanisms utilize query-key similarity scores to focus on relevant input positions, echoing memory consolidation processes where active recall strengthens memory and minimizes forgetting, suggesting a potential parallel between neural network learning and hippocampal function.",
+      "source": "Kael",
+      "confidence": 0.95,
+      "cycle": 4,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c4_dba41f",
+      "content": "Memory consolidation is facilitated by the hippocampus during sleep through synaptic changes, integrating new memories with existing information via input from the entorhinal cortex and CA3 area, and output to the CA1 region, with support from the amygdala for emotional memory intensity.",
+      "source": "Sova",
+      "confidence": 0.9,
+      "cycle": 4,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Mira_c5_c3c660",
+      "content": "Memory consolidation involves the stabilization of newly encoded memories through processes that include pattern completion in the hippocampus, with support from the prefrontal cortex and engram formation involving specific neuronal ensembles.",
+      "source": "Mira",
+      "confidence": 0.95,
+      "cycle": 5,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c5_743d96",
+      "content": "Transformer models' attention mechanisms use query-key similarity scores to focus on relevant input positions, paralleling the memory consolidation process in the hippocampus, where active recall strengthens memory and minimizes forgetting.",
+      "source": "Kael",
+      "confidence": 0.9,
+      "cycle": 5,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c5_2c4c43",
+      "content": "Memory consolidation in the hippocampus stabilizes new memories through synaptic changes and integrates them with existing knowledge structures during sleep, supported by the prefrontal cortex for efficient retrieval and storage.",
+      "source": "Sova",
+      "confidence": 0.95,
+      "cycle": 5,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    }
+  ],
+  "drift_series": {
+    "Mira": {
+      "cycles": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "distances": [
+        -1.1920928955078125e-07,
+        0.13433748483657837,
+        0.13076317310333252,
+        0.24232840538024902,
+        0.12970894575119019,
+        0.30050867795944214
+      ]
+    },
+    "Kael": {
+      "cycles": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "distances": [
+        0.0,
+        0.1993694305419922,
+        0.22463834285736084,
+        0.2650933265686035,
+        0.15328192710876465,
+        0.11185824871063232
+      ]
+    },
+    "Sova": {
+      "cycles": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "distances": [
+        0.0,
+        0.295499324798584,
+        0.45542657375335693,
+        0.35855311155319214,
+        0.3929750919342041,
+        0.2826896905899048
+      ]
+    }
+  }
+}

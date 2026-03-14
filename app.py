@@ -591,13 +591,13 @@ elif page == "Belief Dynamics":
         {
             "name":     "Mira",
             "interest": "memory consolidation and the role of the hippocampus in sleep",
-            "seed":     "c3_hippocampus",
+            "seed":     "c2_ebbinghaus",  # H3: all agents same bridge seed
             "color":    "#89b4fa",
         },
         {
             "name":     "Kael",
             "interest": "attention mechanisms in transformer models and knowledge retrieval",
-            "seed":     "c4_attention",
+            "seed":     "c2_ebbinghaus",  # H3: all agents same bridge seed
             "color":    "#a6e3a1",
         },
         {
@@ -617,6 +617,14 @@ elif page == "Belief Dynamics":
         n_cycles    = st.number_input("Cycles to run", min_value=1, max_value=20, value=3)
         use_ollama  = st.checkbox("Use Ollama for synthesis", value=True,
                                   help="Uncheck to use heuristic fallback (faster, no LLM)")
+        shared_faiss = st.checkbox("Shared FAISS index", value=True,
+                                   help="Uncheck = isolated mode (baseline): agents cannot find each other's writes via semantic search")
+
+    # ── mode badge ────────────────────────────────────────────────────────────
+    if st.session_state.get("exp_shared_faiss", True):
+        st.success("Mode: **Shared FAISS** — agents can find each other's writes", icon="🔗")
+    elif "exp_population" in st.session_state:
+        st.warning("Mode: **Isolated** (baseline) — agents are semantically blind to each other", icon="🚫")
 
     # ── init / reset ─────────────────────────────────────────────────────────
     col_init, col_reset = st.columns(2)
@@ -633,10 +641,11 @@ elif page == "Belief Dynamics":
                     ollama   = ollama,
                     bandwidth= bandwidth,
                     seed_node_id=p["seed"],
-                    faiss    = faiss,
+                    faiss    = faiss if shared_faiss else None,
                 )
                 for p in AGENT_PRESETS
             ]
+            st.session_state["exp_shared_faiss"] = shared_faiss
             observer   = ExperimentObserver(neo4j, database=settings.neo4j.database)
             population = AgentPopulation(agents)
             st.session_state["exp_population"] = population
@@ -650,7 +659,18 @@ elif page == "Belief Dynamics":
             if "exp_observer" in st.session_state:
                 deleted = st.session_state["exp_observer"].cleanup()
                 st.info(f"Deleted {deleted} experiment nodes from graph.")
-            for key in ["exp_population", "exp_observer", "exp_snapshots", "exp_cycle"]:
+            # Rebuild FAISS from base nodes only — removes all stale experiment vectors
+            with neo4j._driver.session(database=settings.neo4j.database) as _s:
+                base_nodes = list(_s.run(
+                    "MATCH (n:KnowledgeNode) WHERE n.cluster <> 'experiment' OR n.cluster IS NULL "
+                    "RETURN n.id AS id, n.content AS content, n.cluster AS cluster"
+                ))
+            faiss.build_index()
+            faiss.add_batch([
+                {"id": r["id"], "text": r["content"], "metadata": {"cluster": r["cluster"] or ""}}
+                for r in base_nodes if r["id"] and r["content"]
+            ])
+            for key in ["exp_population", "exp_observer", "exp_snapshots", "exp_cycle", "exp_shared_faiss"]:
                 st.session_state.pop(key, None)
             st.rerun()
 

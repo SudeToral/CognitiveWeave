@@ -1,0 +1,349 @@
+{
+  "saved_at": "20260314_192344",
+  "label": "h3_all_same_seed",
+  "agent_presets": [
+    {
+      "name": "Mira",
+      "interest": "memory consolidation and the role of the hippocampus in sleep",
+      "seed": "c2_ebbinghaus",
+      "color": "#89b4fa"
+    },
+    {
+      "name": "Kael",
+      "interest": "attention mechanisms in transformer models and knowledge retrieval",
+      "seed": "c2_ebbinghaus",
+      "color": "#a6e3a1"
+    },
+    {
+      "name": "Sova",
+      "interest": "forgetting curves and long-term memory retention strategies",
+      "seed": "c2_ebbinghaus",
+      "color": "#fab387"
+    }
+  ],
+  "total_cycles": 5,
+  "snapshots": [
+    {
+      "cycle": 0,
+      "node_counts": {
+        "Mira": 1,
+        "Kael": 1,
+        "Sova": 1
+      },
+      "avg_confidence": {
+        "Mira": 0.9,
+        "Kael": 0.9,
+        "Sova": 0.95
+      },
+      "total_nodes": 3,
+      "consensus_anchors": [
+        "c2_retrieval_practice",
+        "c4_continual_learning",
+        "c1_consolidation",
+        "c1_ltp",
+        "c1_protein_synthesis",
+        "c1_reconsolidation",
+        "c2_spacing",
+        "c3_sleep_consolidation",
+        "c3_swr"
+      ],
+      "cross_reads": {
+        "Mira": 0,
+        "Kael": 0,
+        "Sova": 1
+      }
+    },
+    {
+      "cycle": 1,
+      "node_counts": {
+        "Mira": 2,
+        "Kael": 2,
+        "Sova": 2
+      },
+      "avg_confidence": {
+        "Mira": 0.925,
+        "Kael": 0.925,
+        "Sova": 0.95
+      },
+      "total_nodes": 6,
+      "consensus_anchors": [
+        "c2_retrieval_practice",
+        "c4_continual_learning",
+        "c1_consolidation",
+        "c1_ltp",
+        "c1_protein_synthesis",
+        "c1_reconsolidation",
+        "c2_spacing",
+        "c3_sleep_consolidation",
+        "c3_swr"
+      ],
+      "cross_reads": {
+        "Mira": 1,
+        "Kael": 0,
+        "Sova": 3
+      }
+    },
+    {
+      "cycle": 2,
+      "node_counts": {
+        "Mira": 3,
+        "Kael": 3,
+        "Sova": 3
+      },
+      "avg_confidence": {
+        "Mira": 0.9166666666666667,
+        "Kael": 0.9333333333333333,
+        "Sova": 0.9333333333333333
+      },
+      "total_nodes": 9,
+      "consensus_anchors": [
+        "c2_retrieval_practice",
+        "c4_continual_learning",
+        "c1_consolidation",
+        "c1_ltp",
+        "c1_protein_synthesis",
+        "c1_reconsolidation",
+        "c2_spacing",
+        "c3_sleep_consolidation",
+        "c3_swr"
+      ],
+      "cross_reads": {
+        "Mira": 3,
+        "Kael": 0,
+        "Sova": 6
+      }
+    },
+    {
+      "cycle": 3,
+      "node_counts": {
+        "Mira": 4,
+        "Kael": 4,
+        "Sova": 4
+      },
+      "avg_confidence": {
+        "Mira": 0.925,
+        "Kael": 0.9375,
+        "Sova": 0.9375
+      },
+      "total_nodes": 12,
+      "consensus_anchors": [
+        "c2_retrieval_practice",
+        "c4_continual_learning",
+        "c1_consolidation",
+        "c1_ltp",
+        "c1_protein_synthesis",
+        "c1_reconsolidation",
+        "c2_spacing",
+        "c3_sleep_consolidation",
+        "c3_swr"
+      ],
+      "cross_reads": {
+        "Mira": 6,
+        "Kael": 0,
+        "Sova": 10
+      }
+    },
+    {
+      "cycle": 4,
+      "node_counts": {
+        "Mira": 5,
+        "Kael": 5,
+        "Sova": 5
+      },
+      "avg_confidence": {
+        "Mira": 0.92,
+        "Kael": 0.93,
+        "Sova": 0.93
+      },
+      "total_nodes": 15,
+      "consensus_anchors": [
+        "c4_continual_learning",
+        "c2_retrieval_practice",
+        "c2_spacing",
+        "c1_reconsolidation",
+        "c1_protein_synthesis",
+        "c1_ltp",
+        "c1_consolidation",
+        "c3_swr",
+        "c3_sleep_consolidation"
+      ],
+      "cross_reads": {
+        "Mira": 9,
+        "Kael": 0,
+        "Sova": 15
+      }
+    }
+  ],
+  "belief_log": [
+    {
+      "id": "exp_Mira_c0_321fc7",
+      "content": "Memory consolidation during sleep, particularly through sharp-wave ripples in NREM slow-wave sleep, stabilises and reorganizes memories at both synaptic and systems levels, leveraging the hippocampus for efficient learning and forgetting processes.",
+      "source": "Mira",
+      "confidence": 0.9,
+      "cycle": 0,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c0_16f4c9",
+      "content": "Transformer models use attention mechanisms to selectively focus on input positions based on query-key similarity scores, akin to selective attention that filters task-relevant information, while retrieval-Augmented Generation (RAG) augments language generation by retrieving relevant documents grounded in factual knowledge using semantic networks.",
+      "source": "Kael",
+      "confidence": 0.9,
+      "cycle": 0,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c0_0b7add",
+      "content": "Memory retention is improved through retrieval practice and spacing effect strategies, facilitated by processes like sharp-wave ripples during NREM sleep that consolidate memories at both synaptic and system levels.",
+      "source": "Sova",
+      "confidence": 0.95,
+      "cycle": 0,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Mira_c1_3c7387",
+      "content": "Memory consolidation during sleep, particularly through sharp-wave ripples in NREM slow-wave sleep, involves both synaptic and system-level reorganization with the hippocampus playing a crucial role in stabilizing and updating memories.",
+      "source": "Mira",
+      "confidence": 0.95,
+      "cycle": 1,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c1_450143",
+      "content": "Transformer models use attention mechanisms to selectively focus on input positions based on query-key similarity scores, similar to human selective attention that filters task-relevant information for efficient processing, while retrieval-Augmented Generation (RAG) enhances language generation by retrieving relevant documents to ensure grounding in factual knowledge.",
+      "source": "Kael",
+      "confidence": 0.95,
+      "cycle": 1,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c1_50488b",
+      "content": "Memory retention is improved through strategies like retrieval practice and spacing effect, facilitated by processes such as sharp-wave ripples in NREM sleep that consolidate memories at both synaptic and system levels involving the hippocampus.",
+      "source": "Sova",
+      "confidence": 0.95,
+      "cycle": 1,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Mira_c2_69aa52",
+      "content": "Memory consolidation during sleep, particularly through sharp-wave ripples in NREM slow-wave sleep, involves both synaptic strengthening via processes like LTP and system-level reorganization involving the hippocampus for efficient learning and forgetting processes.",
+      "source": "Mira",
+      "confidence": 0.9,
+      "cycle": 2,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c2_0c04a9",
+      "content": "Transformer models use attention mechanisms to selectively focus on relevant input positions based on query-key similarity scores, akin to human selective attention that filters task-relevant information, while retrieval-Augmented Generation (RAG) enhances language generation by retrieving and integrating relevant documents.",
+      "source": "Kael",
+      "confidence": 0.95,
+      "cycle": 2,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c2_33dc73",
+      "content": "Memory consolidation during sleep, particularly through sharp-wave ripples in NREM slow-wave sleep, involves both synaptic and system-level reorganization with the hippocampus playing a crucial role in stabilizing and updating memories, facilitated by processes like LTP and the replay of memories during REM sleep.",
+      "source": "Sova",
+      "confidence": 0.9,
+      "cycle": 2,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Mira_c3_8c8304",
+      "content": "Memory consolidation during sleep, particularly through sharp-wave ripples in NREM slow-wave sleep, involves both synaptic strengthening via processes like LTP and system-level reorganization involving the hippocampus for efficient learning and forgetting processes, thereby improving memory retention.",
+      "source": "Mira",
+      "confidence": 0.95,
+      "cycle": 3,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c3_4d78ec",
+      "content": "Transformer models use attention mechanisms to selectively focus on relevant input positions based on query-key similarity scores, akin to human selective attention that filters task-relevant information for efficient processing, while retrieval-Augmented Generation (RAG) enhances language generation by retrieving and integrating pertinent documents.",
+      "source": "Kael",
+      "confidence": 0.95,
+      "cycle": 3,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c3_517f94",
+      "content": "Memory retention is improved through strategies such as retrieval practice and spacing effect, which are facilitated by sleep processes like sharp-wave ripples in NREM slow-wave sleep that consolidate memories at both synaptic and system levels involving the hippocampus.",
+      "source": "Sova",
+      "confidence": 0.95,
+      "cycle": 3,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Mira_c4_18435f",
+      "content": "Memory consolidation during sleep, particularly through sharp-wave ripples in NREM slow-wave sleep, involves both synaptic strengthening via processes like LTP and system-level reorganization involving the hippocampus for efficient learning and forgetting processes, thereby improving memory retention.",
+      "source": "Mira",
+      "confidence": 0.9,
+      "cycle": 4,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c4_6bcf6f",
+      "content": "Transformer models use attention mechanisms to selectively focus on relevant input positions based on query-key similarity scores, much like human selective attention that filters task-relevant information, and can be enhanced with retrieval-Augmented Generation (RAG) for language generation by retrieving and integrating relevant documents.",
+      "source": "Kael",
+      "confidence": 0.9,
+      "cycle": 4,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c4_7d040f",
+      "content": "Memory retention is improved through strategies like retrieval practice and spacing effect, which are facilitated by processes such as sharp-wave ripples during NREM sleep that consolidate memories at both synaptic and system levels involving the hippocampus.",
+      "source": "Sova",
+      "confidence": 0.9,
+      "cycle": 4,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    }
+  ],
+  "drift_series": {
+    "Mira": {
+      "cycles": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "distances": [
+        -1.1920928955078125e-07,
+        0.027338385581970215,
+        0.039730608463287354,
+        0.04693484306335449,
+        0.04693484306335449
+      ]
+    },
+    "Kael": {
+      "cycles": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "distances": [
+        -1.1920928955078125e-07,
+        0.048910677433013916,
+        0.0747271180152893,
+        0.07498776912689209,
+        0.06955832242965698
+      ]
+    },
+    "Sova": {
+      "cycles": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "distances": [
+        0.0,
+        0.0295296311378479,
+        0.15150600671768188,
+        0.03999888896942139,
+        0.022397994995117188
+      ]
+    }
+  }
+}

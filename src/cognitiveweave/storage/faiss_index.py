@@ -104,6 +104,31 @@ class FAISSIndex:
         del self._meta_map[node_id]
         self._id_map = [self._id_map[i] for i in keep]
 
+    def prune_experiment_nodes(self) -> int:
+        """Remove all experiment nodes (id starts with 'exp_') from the index.
+
+        Called on experiment reset so stale vectors don't pollute future runs.
+        Returns the number of entries removed.
+        """
+        exp_ids = [nid for nid in self._id_map if nid.startswith("exp_")]
+        if not exp_ids:
+            return 0
+        keep_mask = [not nid.startswith("exp_") for nid in self._id_map]
+        keep_indices = [i for i, k in enumerate(keep_mask) if k]
+        if not keep_indices:
+            self.build_index()
+            return len(exp_ids)
+        all_vecs = np.zeros((self._index.ntotal, self._settings.dimension), dtype="float32")
+        for i in range(self._index.ntotal):
+            self._index.reconstruct(i, all_vecs[i])
+        kept_vecs = all_vecs[keep_indices]
+        self._index = faiss.IndexFlatIP(self._settings.dimension)
+        self._index.add(kept_vecs)
+        for nid in exp_ids:
+            self._meta_map.pop(nid, None)
+        self._id_map = [self._id_map[i] for i in keep_indices]
+        return len(exp_ids)
+
     # ------------------------------------------------------------------
     # Search
     # ------------------------------------------------------------------

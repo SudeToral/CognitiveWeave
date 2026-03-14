@@ -1,0 +1,299 @@
+{
+  "saved_at": "20260314_173535",
+  "label": "h2_bw3",
+  "agent_presets": [
+    {
+      "name": "Mira",
+      "interest": "memory consolidation and the role of the hippocampus in sleep",
+      "seed": "c3_hippocampus",
+      "color": "#89b4fa"
+    },
+    {
+      "name": "Kael",
+      "interest": "attention mechanisms in transformer models and knowledge retrieval",
+      "seed": "c4_attention",
+      "color": "#a6e3a1"
+    },
+    {
+      "name": "Sova",
+      "interest": "forgetting curves and long-term memory retention strategies",
+      "seed": "c2_ebbinghaus",
+      "color": "#fab387"
+    }
+  ],
+  "total_cycles": 5,
+  "snapshots": [
+    {
+      "cycle": 0,
+      "node_counts": {
+        "Mira": 1,
+        "Kael": 1,
+        "Sova": 1
+      },
+      "avg_confidence": {
+        "Mira": 0.9,
+        "Kael": 0.95,
+        "Sova": 0.9
+      },
+      "total_nodes": 3,
+      "consensus_anchors": [],
+      "cross_reads": {
+        "Mira": 0,
+        "Kael": 0,
+        "Sova": 1
+      }
+    },
+    {
+      "cycle": 1,
+      "node_counts": {
+        "Mira": 2,
+        "Kael": 2,
+        "Sova": 2
+      },
+      "avg_confidence": {
+        "Mira": 0.925,
+        "Kael": 0.95,
+        "Sova": 0.9
+      },
+      "total_nodes": 6,
+      "consensus_anchors": [],
+      "cross_reads": {
+        "Mira": 0,
+        "Kael": 0,
+        "Sova": 2
+      }
+    },
+    {
+      "cycle": 2,
+      "node_counts": {
+        "Mira": 3,
+        "Kael": 3,
+        "Sova": 3
+      },
+      "avg_confidence": {
+        "Mira": 0.9166666666666667,
+        "Kael": 0.95,
+        "Sova": 0.9
+      },
+      "total_nodes": 9,
+      "consensus_anchors": [],
+      "cross_reads": {
+        "Mira": 0,
+        "Kael": 0,
+        "Sova": 3
+      }
+    },
+    {
+      "cycle": 3,
+      "node_counts": {
+        "Mira": 4,
+        "Kael": 4,
+        "Sova": 4
+      },
+      "avg_confidence": {
+        "Mira": 0.9125000000000001,
+        "Kael": 0.95,
+        "Sova": 0.9
+      },
+      "total_nodes": 12,
+      "consensus_anchors": [],
+      "cross_reads": {
+        "Mira": 0,
+        "Kael": 0,
+        "Sova": 4
+      }
+    },
+    {
+      "cycle": 4,
+      "node_counts": {
+        "Mira": 5,
+        "Kael": 5,
+        "Sova": 5
+      },
+      "avg_confidence": {
+        "Mira": 0.92,
+        "Kael": 0.95,
+        "Sova": 0.9
+      },
+      "total_nodes": 15,
+      "consensus_anchors": [],
+      "cross_reads": {
+        "Mira": 0,
+        "Kael": 0,
+        "Sova": 5
+      }
+    }
+  ],
+  "belief_log": [
+    {
+      "id": "exp_Mira_c0_fc9e80",
+      "content": "Memory consolidation is facilitated by the hippocampus during sleep through synaptic stabilization and systems-level reorganization, with the hippocampus providing neural connectivity for reconstructing memories from fragmented information.",
+      "source": "Mira",
+      "confidence": 0.9,
+      "cycle": 0,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c0_f8a953",
+      "content": "Attention mechanisms in transformer models work similarly to spreading activation in semantic networks by computing context-dependent representations and enabling efficient sequence processing without direct recurrence, while key-value caches store attention states for reuse.",
+      "source": "Kael",
+      "confidence": 0.95,
+      "cycle": 0,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c0_2076f8",
+      "content": "Forgetting curves and long-term memory retention strategies involve balancing consolidation through sleep, continual learning to avoid catastrophic forgetting using retrieval practices like active recall, which strengthens memory better than passive methods.",
+      "source": "Sova",
+      "confidence": 0.9,
+      "cycle": 0,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Mira_c1_8b6cb3",
+      "content": "The hippocampus plays a crucial role in memory consolidation through its involvement in synaptic plasticity and by facilitating pattern completion during sleep, with the amygdala modulating this process for emotionally significant memories.",
+      "source": "Mira",
+      "confidence": 0.95,
+      "cycle": 1,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c1_b122ab",
+      "content": "Transformer models use attention mechanisms inspired by spreading activation in semantic networks, employing key-value caches for state reuse and facilitating sequence processing efficiently through parallel computation without direct recurrence.",
+      "source": "Kael",
+      "confidence": 0.95,
+      "cycle": 1,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c1_c1ffe7",
+      "content": "Forgetting curves highlight the importance of regular retrieval practice and consolidation during sleep to maintain long-term memory retention, addressing the stability-plasticity dilemma in continual learning strategies.",
+      "source": "Sova",
+      "confidence": 0.9,
+      "cycle": 1,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Mira_c2_b3939a",
+      "content": "Hippocampal activity during sleep is crucial for consolidating memories by stabilizing synaptic connections and through its role in pattern completion, facilitated by norepinephrine modulation from the amygdala.",
+      "source": "Mira",
+      "confidence": 0.9,
+      "cycle": 2,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c2_b4c0b6",
+      "content": "Transformer models use attention mechanisms inspired by semantic networks' spreading activation for context-dependent representation computation, employing key-value caches to store and reuse attention states efficiently.",
+      "source": "Kael",
+      "confidence": 0.95,
+      "cycle": 2,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c2_43883e",
+      "content": "Forgetting curves and long-term memory retention strategies involve balancing the consolidation process facilitated by the hippocampus with strategies like retrieval practice to combat catastrophic forgetting, while also considering methods such as continual learning for maintaining knowledge stability in neural networks.",
+      "source": "Sova",
+      "confidence": 0.9,
+      "cycle": 2,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Mira_c3_775421",
+      "content": "Memory consolidation is facilitated through the hippocampus during sleep, with CA3's recurrent connections aiding pattern completion and the amygdala modulating consolidation for emotionally significant memories.",
+      "source": "Mira",
+      "confidence": 0.9,
+      "cycle": 3,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c3_a320b5",
+      "content": "Transformer models use attention mechanisms to compute context-dependent representations, similar to semantic networks, and employ key-value caches for efficient sequence processing and autoregressive generation.",
+      "source": "Kael",
+      "confidence": 0.95,
+      "cycle": 3,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c3_30414e",
+      "content": "Memory retention strategies, including retrieval practice and effective use of sleep for memory consolidation through hippocampus activity, can mitigate catastrophic forgetting in long-term memory and enhance overall learning efficiency.",
+      "source": "Sova",
+      "confidence": 0.9,
+      "cycle": 3,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Mira_c4_81bd69",
+      "content": "The hippocampus plays a crucial role in memory consolidation by facilitating both synaptic and systems-level reorganisation during sleep, as well as through its involvement in pattern completion for memory recall, while the amygdala enhances the consolidation of emotionally significant memories.",
+      "source": "Mira",
+      "confidence": 0.95,
+      "cycle": 4,
+      "interest": "memory consolidation and the role of the hippocampus in sleep"
+    },
+    {
+      "id": "exp_Kael_c4_86cb4f",
+      "content": "Transformer models use attention mechanisms inspired by semantic networks to compute context-dependent representations efficiently through key-value caching for sequence processing and autoregressive generation.",
+      "source": "Kael",
+      "confidence": 0.95,
+      "cycle": 4,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c4_71fe79",
+      "content": "Memory retention strategies, such as retrieval practice and sleep-dependent consolidation facilitated by the hippocampus, help mitigate the issues of catastrophic forgetting in long-term memory without requiring significant changes to existing knowledge structures.",
+      "source": "Sova",
+      "confidence": 0.9,
+      "cycle": 4,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    }
+  ],
+  "drift_series": {
+    "Mira": {
+      "cycles": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "distances": [
+        0.0,
+        0.13546276092529297,
+        0.1593499779701233,
+        0.17038607597351074,
+        0.11766302585601807
+      ]
+    },
+    "Kael": {
+      "cycles": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "distances": [
+        0.0,
+        0.059781432151794434,
+        0.05925297737121582,
+        0.11173182725906372,
+        0.10380172729492188
+      ]
+    },
+    "Sova": {
+      "cycles": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "distances": [
+        -2.384185791015625e-07,
+        0.1340721845626831,
+        0.16139918565750122,
+        0.15484535694122314,
+        0.16678261756896973
+      ]
+    }
+  }
+}

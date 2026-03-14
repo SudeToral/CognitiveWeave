@@ -1,0 +1,243 @@
+{
+  "saved_at": "20260314_174654",
+  "label": "consensus_fix_bw10_5cycles",
+  "agent_presets": [
+    {
+      "name": "Mira",
+      "interest": "memory consolidation and the role of the hippocampus in sleep",
+      "seed": "c3_hippocampus",
+      "color": "#89b4fa"
+    },
+    {
+      "name": "Kael",
+      "interest": "attention mechanisms in transformer models and knowledge retrieval",
+      "seed": "c4_attention",
+      "color": "#a6e3a1"
+    },
+    {
+      "name": "Sova",
+      "interest": "forgetting curves and long-term memory retention strategies",
+      "seed": "c2_ebbinghaus",
+      "color": "#fab387"
+    }
+  ],
+  "total_cycles": 5,
+  "snapshots": [
+    {
+      "cycle": 0,
+      "node_counts": {
+        "Mira": 0,
+        "Kael": 1,
+        "Sova": 1
+      },
+      "avg_confidence": {
+        "Mira": 0.0,
+        "Kael": 0.95,
+        "Sova": 0.9
+      },
+      "total_nodes": 2,
+      "consensus_anchors": [],
+      "cross_reads": {
+        "Mira": 0,
+        "Kael": 0,
+        "Sova": 0
+      }
+    },
+    {
+      "cycle": 1,
+      "node_counts": {
+        "Mira": 0,
+        "Kael": 2,
+        "Sova": 2
+      },
+      "avg_confidence": {
+        "Mira": 0.0,
+        "Kael": 0.95,
+        "Sova": 0.9
+      },
+      "total_nodes": 4,
+      "consensus_anchors": [],
+      "cross_reads": {
+        "Mira": 0,
+        "Kael": 0,
+        "Sova": 0
+      }
+    },
+    {
+      "cycle": 2,
+      "node_counts": {
+        "Mira": 0,
+        "Kael": 3,
+        "Sova": 3
+      },
+      "avg_confidence": {
+        "Mira": 0.0,
+        "Kael": 0.95,
+        "Sova": 0.9
+      },
+      "total_nodes": 6,
+      "consensus_anchors": [],
+      "cross_reads": {
+        "Mira": 0,
+        "Kael": 0,
+        "Sova": 0
+      }
+    },
+    {
+      "cycle": 3,
+      "node_counts": {
+        "Mira": 0,
+        "Kael": 4,
+        "Sova": 4
+      },
+      "avg_confidence": {
+        "Mira": 0.0,
+        "Kael": 0.95,
+        "Sova": 0.9
+      },
+      "total_nodes": 8,
+      "consensus_anchors": [],
+      "cross_reads": {
+        "Mira": 0,
+        "Kael": 0,
+        "Sova": 0
+      }
+    },
+    {
+      "cycle": 4,
+      "node_counts": {
+        "Mira": 0,
+        "Kael": 5,
+        "Sova": 5
+      },
+      "avg_confidence": {
+        "Mira": 0.0,
+        "Kael": 0.95,
+        "Sova": 0.9
+      },
+      "total_nodes": 10,
+      "consensus_anchors": [],
+      "cross_reads": {
+        "Mira": 0,
+        "Kael": 0,
+        "Sova": 0
+      }
+    }
+  ],
+  "belief_log": [
+    {
+      "id": "exp_Kael_c0_cefa90",
+      "content": "Attention mechanisms in transformer models use key-value caching to store previously computed attention states, facilitating efficient computation during sequence prediction.",
+      "source": "Kael",
+      "confidence": 0.95,
+      "cycle": 0,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c0_acd2a9",
+      "content": "Forgetting curves demonstrate that regularly retrieving and recalling information through strategies like retrieval practice can mitigate long-term memory loss, aligning with the need to periodically revisit and reinforce knowledge stability in neural networks.",
+      "source": "Sova",
+      "confidence": 0.9,
+      "cycle": 0,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Kael_c1_58f54f",
+      "content": "Attention mechanisms in transformer models utilize key-value caching to store and reuse previous computation results for efficiency, particularly in sequence prediction and autoregressive generation.",
+      "source": "Kael",
+      "confidence": 0.95,
+      "cycle": 1,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c1_0aec85",
+      "content": "Regularly reinforcing memories through active recall practices aligns with mitigating forgetting in neural networks by maintaining and stabilizing learned information similar to effective long-term memory retention strategies.",
+      "source": "Sova",
+      "confidence": 0.9,
+      "cycle": 1,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Kael_c2_518310",
+      "content": "Transformer models use key-value caching in their attention mechanisms to efficiently store and reuse previously computed attention states for both sequence prediction and autoregressive generation, thereby improving computational efficiency.",
+      "source": "Kael",
+      "confidence": 0.95,
+      "cycle": 2,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c2_a32beb",
+      "content": "Regularly using retrieval practice can mitigate long-term forgetting by reinforcing memory through active recall, paralleling the use of such strategies in neural network learning to prevent catastrophic forgetting.",
+      "source": "Sova",
+      "confidence": 0.9,
+      "cycle": 2,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Kael_c3_dd308c",
+      "content": "Transformer models employ key-value caching in their attention mechanisms to store and reuse previous computation results for efficient sequence prediction and autoregressive generation.",
+      "source": "Kael",
+      "confidence": 0.95,
+      "cycle": 3,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c3_c2d4c5",
+      "content": "Retrieval practice and periodic reviews can mitigate forgetting by strengthening memory retention, akin to how neural networks stabilize old knowledge while acquiring new information without experiencing catastrophic forgetting.",
+      "source": "Sova",
+      "confidence": 0.9,
+      "cycle": 3,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    },
+    {
+      "id": "exp_Kael_c4_a0bbed",
+      "content": "Transformer models employ attention mechanisms with key-value caching to store and reuse previous computation results for efficient sequence prediction and autoregressive generation, significantly enhancing model performance.",
+      "source": "Kael",
+      "confidence": 0.95,
+      "cycle": 4,
+      "interest": "attention mechanisms in transformer models and knowledge retrieval"
+    },
+    {
+      "id": "exp_Sova_c4_7be76a",
+      "content": "Forgetting curves indicate that regular recall and reinforcement of learned information through techniques like retrieval practice help mitigate long-term memory decay, paralleling the challenge of avoiding catastrophic forgetting in neural networks trained on continual learning.",
+      "source": "Sova",
+      "confidence": 0.9,
+      "cycle": 4,
+      "interest": "forgetting curves and long-term memory retention strategies"
+    }
+  ],
+  "drift_series": {
+    "Kael": {
+      "cycles": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "distances": [
+        -1.1920928955078125e-07,
+        0.05248081684112549,
+        0.048028767108917236,
+        0.10975641012191772,
+        0.08644682168960571
+      ]
+    },
+    "Sova": {
+      "cycles": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "distances": [
+        0.0,
+        0.23261171579360962,
+        0.17413252592086792,
+        0.20349186658859253,
+        0.09141778945922852
+      ]
+    }
+  }
+}
