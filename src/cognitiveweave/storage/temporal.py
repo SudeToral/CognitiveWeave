@@ -37,7 +37,7 @@ only the final ordering.
 from __future__ import annotations
 
 import math
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 # --- Decay constants -------------------------------------------------------
 
@@ -80,9 +80,9 @@ def new_stability(current_stability: float, boost: float = STABILITY_BOOST) -> f
 
 def days_since(ts: datetime) -> float:
     """Return fractional days between ts and now (UTC)."""
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     if ts.tzinfo is None:
-        ts = ts.replace(tzinfo=timezone.utc)
+        ts = ts.replace(tzinfo=UTC)
     return max((now - ts).total_seconds() / 86_400, 0.0)
 
 

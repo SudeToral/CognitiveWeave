@@ -1,9 +1,10 @@
 """Unit tests for HybridRetriever RRF + temporal scoring — storage layers are mocked."""
 from __future__ import annotations
 
-import pytest
-from datetime import datetime, timezone, timedelta
+from datetime import UTC, datetime, timedelta
 from unittest.mock import MagicMock
+
+import pytest
 
 from cognitiveweave.retrieval.hybrid_retriever import HybridRetriever, RetrievalResult
 
@@ -103,8 +104,8 @@ class TestTemporalScoring:
         assert result.recency_boost == pytest.approx(1.0, abs=0.01)
 
     def test_recent_node_scores_higher_than_old(self):
-        recent_ts = datetime.now(timezone.utc).isoformat()
-        old_ts = (datetime.now(timezone.utc) - timedelta(days=90)).isoformat()
+        recent_ts = datetime.now(UTC).isoformat()
+        old_ts = (datetime.now(UTC) - timedelta(days=90)).isoformat()
         r = make_retriever(
             faiss_results=[
                 {"id": "old", "score": 0.9, "created_at": old_ts},
@@ -123,8 +124,8 @@ class TestTemporalScoring:
         )
 
     def test_sorted_by_temporal_score(self):
-        recent_ts = datetime.now(timezone.utc).isoformat()
-        old_ts = (datetime.now(timezone.utc) - timedelta(days=365)).isoformat()
+        recent_ts = datetime.now(UTC).isoformat()
+        old_ts = (datetime.now(UTC) - timedelta(days=365)).isoformat()
         # old node has slightly higher RRF but should lose on temporal
         r = make_retriever(
             faiss_results=[
@@ -138,7 +139,7 @@ class TestTemporalScoring:
         assert temporal_scores == sorted(temporal_scores, reverse=True)
 
     def test_larger_halflife_penalises_old_nodes_less(self):
-        old_ts = (datetime.now(timezone.utc) - timedelta(days=30)).isoformat()
+        old_ts = (datetime.now(UTC) - timedelta(days=30)).isoformat()
         short = make_retriever(
             faiss_results=[{"id": "n1", "score": 0.9, "created_at": old_ts}],
             recency_halflife=15,

@@ -16,10 +16,9 @@ from __future__ import annotations
 import logging
 import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from typing import Any
 
+from cognitiveweave.agents.monitor import _METRIC_KEYS
 from cognitiveweave.bus.redis_bus import RedisBus
-from cognitiveweave.agents.monitor import MonitorAgent, _METRIC_KEYS
 
 logger = logging.getLogger(__name__)
 

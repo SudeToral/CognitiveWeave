@@ -5,7 +5,7 @@ import time
 from typing import Any
 
 from cognitiveweave.agents.base import BaseAgent
-from cognitiveweave.bus.redis_bus import RedisBus, CH_MONITOR
+from cognitiveweave.bus.redis_bus import CH_MONITOR, RedisBus
 
 logger = logging.getLogger(__name__)
 

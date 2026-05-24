@@ -86,20 +86,20 @@ class ExperimentObserver:
                n.interest  AS interest
         ORDER BY n.cycle ASC
         """
-        with self._neo4j._driver.session(database=self._db) as s:
+        with self._neo4j._session() as s:
             return [dict(r) for r in s.run(query)]
 
     def has_experiment_data(self) -> bool:
         """Return True if any experiment nodes exist in the graph."""
         query = "MATCH (n:KnowledgeNode {cluster: 'experiment'}) RETURN count(n) AS c LIMIT 1"
-        with self._neo4j._driver.session(database=self._db) as s:
+        with self._neo4j._session() as s:
             record = s.run(query).single()
             return bool(record and record["c"] > 0)
 
-    def rebuild_snapshots(self, agent_names: list[str]) -> list["BeliefSnapshot"]:
+    def rebuild_snapshots(self, agent_names: list[str]) -> list[BeliefSnapshot]:
         """Reconstruct per-cycle BeliefSnapshot history from existing Neo4j data."""
         query = "MATCH (n:KnowledgeNode {cluster: 'experiment'}) RETURN DISTINCT n.cycle AS c ORDER BY c ASC"
-        with self._neo4j._driver.session(database=self._db) as s:
+        with self._neo4j._session() as s:
             cycles = [r["c"] for r in s.run(query) if r["c"] is not None]
         return [self.snapshot(c, agent_names) for c in cycles]
 
@@ -110,7 +110,7 @@ class ExperimentObserver:
         RETURN n.cycle AS cycle, n.content AS content
         ORDER BY n.cycle ASC
         """
-        with self._neo4j._driver.session(database=self._db) as s:
+        with self._neo4j._session() as s:
             return [(r["cycle"], r["content"]) for r in s.run(query, src=agent_name)
                     if r["content"]]
 
@@ -121,7 +121,7 @@ class ExperimentObserver:
         DETACH DELETE n
         RETURN count(n) AS deleted
         """
-        with self._neo4j._driver.session(database=self._db) as s:
+        with self._neo4j._session() as s:
             record = s.run(query).single()
             return record["deleted"] if record else 0
 
@@ -135,7 +135,7 @@ class ExperimentObserver:
         RETURN count(n) AS cnt,
                avg(toFloat(n.confidence)) AS avg_conf
         """
-        with self._neo4j._driver.session(database=self._db) as s:
+        with self._neo4j._session() as s:
             record = s.run(query, src=agent_name).single()
             if not record:
                 return 0, 0.0
@@ -145,7 +145,7 @@ class ExperimentObserver:
 
     def _total_experiment_nodes(self) -> int:
         query = "MATCH (n:KnowledgeNode {cluster: 'experiment'}) RETURN count(n) AS c"
-        with self._neo4j._driver.session(database=self._db) as s:
+        with self._neo4j._session() as s:
             record = s.run(query).single()
             return int(record["c"]) if record else 0
 
@@ -164,7 +164,7 @@ class ExperimentObserver:
         ORDER BY size(sources) DESC
         LIMIT 10
         """
-        with self._neo4j._driver.session(database=self._db) as s:
+        with self._neo4j._session() as s:
             return [r["anchor_id"] for r in s.run(query)]
 
     def _cross_read_counts(self, agent_names: list[str]) -> dict[str, int]:
@@ -182,7 +182,7 @@ class ExperimentObserver:
         RETURN writer.source AS agent, count(*) AS cross_count
         """
         counts: dict[str, int] = {name: 0 for name in agent_names}
-        with self._neo4j._driver.session(database=self._db) as s:
+        with self._neo4j._session() as s:
             for record in s.run(query):
                 agent = record["agent"]
                 if agent in counts:

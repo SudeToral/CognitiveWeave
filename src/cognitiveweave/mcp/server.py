@@ -7,11 +7,11 @@ import mcp.types as types
 from mcp.server import Server
 from mcp.server.stdio import stdio_server
 
-from cognitiveweave.bus.redis_bus import RedisBus, CH_RETRIEVER, CH_CURATOR, CH_MONITOR
+from cognitiveweave.bus.redis_bus import CH_CURATOR, RedisBus
 from cognitiveweave.config.settings import Settings
-from cognitiveweave.storage.neo4j_client import Neo4jClient
-from cognitiveweave.storage.faiss_index import FAISSIndex
 from cognitiveweave.retrieval.hybrid_retriever import HybridRetriever
+from cognitiveweave.storage.faiss_index import FAISSIndex
+from cognitiveweave.storage.neo4j_client import Neo4jClient
 
 
 def build_mcp_server(
@@ -139,16 +139,13 @@ def build_mcp_server(
             return [types.TextContent(type="text", text=json.dumps({"node_id": node_id}))]
 
         if name == "get_graph_stats":
-            node_count_result = neo4j._driver.session().run(
-                "MATCH (n:KnowledgeNode) RETURN count(n) AS cnt"
-            ).single()
-            edge_count_result = neo4j._driver.session().run(
-                "MATCH ()-[r]->() RETURN count(r) AS cnt"
-            ).single()
+            with neo4j._session() as s:
+                node_count = (s.run("MATCH (n:KnowledgeNode) RETURN count(n) AS cnt").single() or {}).get("cnt", 0)
+                edge_count = (s.run("MATCH ()-[r]->() RETURN count(r) AS cnt").single() or {}).get("cnt", 0)
             curator_state = await bus.get_state("curator:last_cycle")
             stats = {
-                "node_count": node_count_result["cnt"] if node_count_result else 0,
-                "edge_count": edge_count_result["cnt"] if edge_count_result else 0,
+                "node_count": node_count,
+                "edge_count": edge_count,
                 "faiss_vectors": len(faiss),
                 "curator_last_cycle": curator_state,
             }

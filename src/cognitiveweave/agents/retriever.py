@@ -1,11 +1,10 @@
 from __future__ import annotations
 
 import logging
-from dataclasses import asdict
 from typing import Any
 
 from cognitiveweave.agents.base import BaseAgent
-from cognitiveweave.bus.redis_bus import RedisBus, CH_RETRIEVER
+from cognitiveweave.bus.redis_bus import CH_RETRIEVER, RedisBus
 from cognitiveweave.retrieval.hybrid_retriever import HybridRetriever
 
 logger = logging.getLogger(__name__)

@@ -2,11 +2,12 @@
 from __future__ import annotations
 
 import json
-import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from cognitiveweave.config.settings import RedisSettings
+import pytest
+
 from cognitiveweave.bus.redis_bus import RedisBus
+from cognitiveweave.config.settings import RedisSettings
 
 
 @pytest.fixture()

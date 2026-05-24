@@ -11,7 +11,7 @@ The history is kept in memory so the observer can compute metrics later.
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 from cognitiveweave.experiments.agent import CycleWrite, SocietyAgent
 

@@ -63,7 +63,7 @@ class TestUpsertNode:
     def test_generates_id_when_none(self, client):
         c, driver, session = client
         session.run.return_value.single.return_value = {"id": "generated-uuid"}
-        result = c.upsert_node(content="auto id")
+        c.upsert_node(content="auto id")
         session.run.assert_called_once()
         # id arg is passed in the cypher call
         call_kwargs = session.run.call_args
@@ -95,10 +95,6 @@ class TestEdgeDecay:
 class TestStructuralSearch:
     def test_returns_list_of_dicts(self, client):
         c, driver, session = client
-        mock_records = [
-            {"id": "n2", "score": 0.5, "props": {"content": "neighbor", "id": "n2"}},
-        ]
-
         def make_record(data):
             r = MagicMock()
             r.__getitem__ = lambda self, k: data[k]

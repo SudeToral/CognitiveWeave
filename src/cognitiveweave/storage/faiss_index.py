@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-import os
 import json
 from pathlib import Path
 from typing import Any
 
-import numpy as np
 import faiss
+import numpy as np
 from sentence_transformers import SentenceTransformer
 
 from cognitiveweave.config.settings import FAISSSettings
@@ -95,7 +94,7 @@ class FAISSIndex:
             return
         # Reconstruct remaining vectors
         all_vecs = np.zeros((self._index.ntotal, self._settings.dimension), dtype="float32")
-        faiss.extract_index_ivf  # noqa: just ensure faiss is loaded
+        faiss.extract_index_ivf  # noqa: B018  # just ensure faiss is loaded
         for i in range(self._index.ntotal):
             self._index.reconstruct(i, all_vecs[i])
         kept_vecs = all_vecs[keep]
@@ -140,7 +139,7 @@ class FAISSIndex:
         q_vec = self._embed([query])
         scores, indices = self._index.search(q_vec, min(top_k, self._index.ntotal))
         results = []
-        for score, idx in zip(scores[0], indices[0]):
+        for score, idx in zip(scores[0], indices[0], strict=False):
             if idx == -1:
                 continue
             node_id = self._id_map[idx]

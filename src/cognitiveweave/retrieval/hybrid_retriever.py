@@ -5,7 +5,7 @@ from typing import Any
 
 from cognitiveweave.storage.faiss_index import FAISSIndex
 from cognitiveweave.storage.neo4j_client import Neo4jClient
-from cognitiveweave.storage.temporal import recency_boost_from_iso, DEFAULT_HALFLIFE
+from cognitiveweave.storage.temporal import DEFAULT_HALFLIFE, recency_boost_from_iso
 
 
 @dataclass

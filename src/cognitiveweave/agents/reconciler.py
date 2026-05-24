@@ -1,11 +1,10 @@
 from __future__ import annotations
 
-import asyncio
 import logging
 from typing import Any
 
 from cognitiveweave.agents.base import BaseAgent
-from cognitiveweave.bus.redis_bus import RedisBus, CH_RECONCILER
+from cognitiveweave.bus.redis_bus import CH_RECONCILER, RedisBus
 from cognitiveweave.llm.ollama_client import OllamaClient
 from cognitiveweave.storage.neo4j_client import Neo4jClient
 

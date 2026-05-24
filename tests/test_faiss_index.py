@@ -1,10 +1,10 @@
 """Unit tests for FAISSIndex — model is mocked, pure numpy logic tested."""
 from __future__ import annotations
 
-import json
+from unittest.mock import MagicMock, patch
+
 import numpy as np
 import pytest
-from unittest.mock import MagicMock, patch
 
 from cognitiveweave.config.settings import FAISSSettings
 from cognitiveweave.storage.faiss_index import FAISSIndex

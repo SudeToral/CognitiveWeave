@@ -1,15 +1,15 @@
 """Unit tests for all 5 agents — bus and storage layers are fully mocked."""
 from __future__ import annotations
 
+from unittest.mock import AsyncMock, MagicMock
+
 import pytest
-from unittest.mock import AsyncMock, MagicMock, patch
 
 from cognitiveweave.agents.curator import CuratorAgent
-from cognitiveweave.agents.retriever import RetrieverAgent
-from cognitiveweave.agents.reconciler import ReconcilerAgent, _FORK_KEY
 from cognitiveweave.agents.epistemologist import EpistemologistAgent
-from cognitiveweave.agents.monitor import MonitorAgent, _EVENT_TO_COUNTER
-
+from cognitiveweave.agents.monitor import _EVENT_TO_COUNTER, MonitorAgent
+from cognitiveweave.agents.reconciler import ReconcilerAgent
+from cognitiveweave.agents.retriever import RetrieverAgent
 
 # ---------------------------------------------------------------------------
 # Fixtures

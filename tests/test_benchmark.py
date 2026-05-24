@@ -1,13 +1,13 @@
 """Unit tests for benchmark framework — storage layers are mocked."""
 from __future__ import annotations
 
-import pytest
 from unittest.mock import MagicMock
 
-from benchmarks.dataset import build_dataset, BenchmarkDataset
-from benchmarks.runner import BenchmarkRunner, _mrr, _ndcg, _mean, QueryResult, BenchmarkReport
-from benchmarks.report import improvement_over_baseline, print_table, to_json
+import pytest
 
+from benchmarks.dataset import build_dataset
+from benchmarks.report import improvement_over_baseline, print_table, to_json
+from benchmarks.runner import BenchmarkReport, BenchmarkRunner, _mean, _mrr, _ndcg
 
 # ---------------------------------------------------------------------------
 # Dataset

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import contextlib
 import logging
 from abc import ABC, abstractmethod
 from concurrent.futures import ThreadPoolExecutor
@@ -47,10 +48,8 @@ class BaseAgent(ABC):
     async def stop(self) -> None:
         if self._task and not self._task.done():
             self._task.cancel()
-            try:
+            with contextlib.suppress(asyncio.CancelledError):
                 await self._task
-            except asyncio.CancelledError:
-                pass
         self._executor.shutdown(wait=False)
         logger.info("%s stopped", self.__class__.__name__)
 

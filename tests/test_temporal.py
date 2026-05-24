@@ -2,20 +2,19 @@
 from __future__ import annotations
 
 import math
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 import pytest
 
 from cognitiveweave.storage.temporal import (
+    DEFAULT_STABILITY,
+    MIN_WEIGHT,
+    STABILITY_BOOST,
+    days_since,
     ebbinghaus_decay,
     new_stability,
-    days_since,
     recency_boost,
     recency_boost_from_iso,
-    DEFAULT_STABILITY,
-    STABILITY_BOOST,
-    MIN_WEIGHT,
-    DEFAULT_HALFLIFE,
 )
 
 
@@ -76,11 +75,11 @@ class TestNewStability:
 
 class TestDaysSince:
     def test_now_returns_near_zero(self):
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         assert days_since(now) < 0.001
 
     def test_one_day_ago(self):
-        one_day_ago = datetime.now(timezone.utc) - timedelta(days=1)
+        one_day_ago = datetime.now(UTC) - timedelta(days=1)
         assert days_since(one_day_ago) == pytest.approx(1.0, abs=0.01)
 
     def test_naive_datetime_treated_as_utc(self):
@@ -88,32 +87,32 @@ class TestDaysSince:
         assert days_since(naive) == pytest.approx(1.0, abs=0.01)
 
     def test_future_datetime_returns_zero(self):
-        future = datetime.now(timezone.utc) + timedelta(days=1)
+        future = datetime.now(UTC) + timedelta(days=1)
         assert days_since(future) == 0.0
 
 
 class TestRecencyBoost:
     def test_created_now_returns_one(self):
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         boost = recency_boost(now, halflife_days=30)
         assert boost == pytest.approx(1.0, abs=0.001)
 
     def test_halflife_age_returns_1_over_e(self):
-        old = datetime.now(timezone.utc) - timedelta(days=30)
+        old = datetime.now(UTC) - timedelta(days=30)
         boost = recency_boost(old, halflife_days=30)
         assert boost == pytest.approx(1 / math.e, rel=0.01)
 
     def test_older_nodes_score_lower(self):
-        recent = datetime.now(timezone.utc) - timedelta(days=5)
-        old = datetime.now(timezone.utc) - timedelta(days=60)
+        recent = datetime.now(UTC) - timedelta(days=5)
+        old = datetime.now(UTC) - timedelta(days=60)
         assert recency_boost(recent) > recency_boost(old)
 
     def test_boost_always_in_zero_one(self):
-        very_old = datetime.now(timezone.utc) - timedelta(days=3650)
+        very_old = datetime.now(UTC) - timedelta(days=3650)
         assert 0 < recency_boost(very_old) <= 1.0
 
     def test_larger_halflife_decays_slower(self):
-        age = datetime.now(timezone.utc) - timedelta(days=30)
+        age = datetime.now(UTC) - timedelta(days=30)
         short = recency_boost(age, halflife_days=15)
         long_ = recency_boost(age, halflife_days=60)
         assert long_ > short
@@ -130,11 +129,11 @@ class TestRecencyBoostFromIso:
         assert recency_boost_from_iso("not-a-date") == 1.0
 
     def test_valid_iso_parsed_correctly(self):
-        ts = (datetime.now(timezone.utc) - timedelta(days=30)).isoformat()
+        ts = (datetime.now(UTC) - timedelta(days=30)).isoformat()
         boost = recency_boost_from_iso(ts, halflife_days=30)
         assert boost == pytest.approx(1 / math.e, rel=0.05)
 
     def test_z_suffix_handled(self):
-        ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        ts = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
         boost = recency_boost_from_iso(ts)
         assert boost == pytest.approx(1.0, abs=0.01)

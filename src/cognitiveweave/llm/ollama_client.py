@@ -55,7 +55,7 @@ class OllamaClient:
     def close(self) -> None:
         self._client.close()
 
-    def __enter__(self) -> "OllamaClient":
+    def __enter__(self) -> OllamaClient:
         return self
 
     def __exit__(self, *_: Any) -> None:

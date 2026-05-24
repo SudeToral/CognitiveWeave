@@ -2,8 +2,9 @@ from __future__ import annotations
 
 import json
 import uuid
+from collections.abc import Awaitable, Callable
 from contextlib import asynccontextmanager
-from typing import Any, Callable, Awaitable
+from typing import Any
 
 from redis.asyncio import Redis
 from redis.asyncio.client import PubSub
@@ -52,7 +53,7 @@ class RedisBus:
             await self._redis.aclose()
             self._redis = None
 
-    async def __aenter__(self) -> "RedisBus":
+    async def __aenter__(self) -> RedisBus:
         await self.connect()
         return self
 

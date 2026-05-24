@@ -1,9 +1,9 @@
 """Unit tests for OllamaClient — httpx is fully mocked, no real Ollama needed."""
 from __future__ import annotations
 
-import json
-import pytest
 from unittest.mock import MagicMock, patch
+
+import pytest
 
 from cognitiveweave.config.settings import OllamaSettings
 from cognitiveweave.llm.ollama_client import OllamaClient, _parse_json

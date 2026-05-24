@@ -5,7 +5,7 @@ import logging
 from typing import Any
 
 from cognitiveweave.agents.base import BaseAgent
-from cognitiveweave.bus.redis_bus import RedisBus, CH_CURATOR
+from cognitiveweave.bus.redis_bus import CH_CURATOR, RedisBus
 from cognitiveweave.storage.neo4j_client import Neo4jClient
 
 logger = logging.getLogger(__name__)

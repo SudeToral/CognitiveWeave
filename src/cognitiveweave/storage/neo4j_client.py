@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import uuid
+from collections.abc import Generator
+from contextlib import contextmanager
 from typing import Any
 
-from neo4j import GraphDatabase, Driver
+from neo4j import Driver, GraphDatabase, Session
 
 from cognitiveweave.config.settings import Neo4jSettings
 from cognitiveweave.storage.temporal import DEFAULT_STABILITY, STABILITY_BOOST
@@ -15,6 +17,14 @@ class Neo4jClient:
     def __init__(self, settings: Neo4jSettings) -> None:
         self._settings = settings
         self._driver: Driver | None = None
+
+    @contextmanager
+    def _session(self) -> Generator[Session, None, None]:
+        """Open a managed session. Raises RuntimeError if not connected."""
+        if self._driver is None:
+            raise RuntimeError("Neo4jClient not connected — call connect() first")
+        with self._driver.session(database=self._settings.database) as session:
+            yield session
 
     # ------------------------------------------------------------------
     # Lifecycle
@@ -32,7 +42,7 @@ class Neo4jClient:
             self._driver.close()
             self._driver = None
 
-    def __enter__(self) -> "Neo4jClient":
+    def __enter__(self) -> Neo4jClient:
         self.connect()
         return self
 
@@ -48,7 +58,7 @@ class Neo4jClient:
         queries = [
             "CREATE CONSTRAINT node_id IF NOT EXISTS FOR (n:KnowledgeNode) REQUIRE n.id IS UNIQUE",
         ]
-        with self._driver.session(database=self._settings.database) as s:
+        with self._session() as s:
             for q in queries:
                 s.run(q)
 
@@ -74,7 +84,7 @@ class Neo4jClient:
         SET n += $props
         RETURN n.id AS id
         """
-        with self._driver.session(database=self._settings.database) as s:
+        with self._session() as s:
             result = s.run(query, id=node_id, props=props)
             return result.single()["id"]
 
@@ -102,12 +112,12 @@ class Neo4jClient:
                       r.stability     = $stability
         SET r += $props
         """
-        with self._driver.session(database=self._settings.database) as s:
+        with self._session() as s:
             s.run(query, src=source_id, tgt=target_id, props=props, stability=DEFAULT_STABILITY)
 
     def delete_node(self, node_id: str) -> None:
         query = "MATCH (n:KnowledgeNode {id: $id}) DETACH DELETE n"
-        with self._driver.session(database=self._settings.database) as s:
+        with self._session() as s:
             s.run(query, id=node_id)
 
     # ------------------------------------------------------------------
@@ -116,7 +126,7 @@ class Neo4jClient:
 
     def get_node(self, node_id: str) -> dict[str, Any] | None:
         query = "MATCH (n:KnowledgeNode {id: $id}) RETURN properties(n) AS props"
-        with self._driver.session(database=self._settings.database) as s:
+        with self._session() as s:
             record = s.run(query, id=node_id).single()
             return dict(record["props"]) if record else None
 
@@ -150,7 +160,7 @@ class Neo4jClient:
         ORDER BY score DESC
         LIMIT $limit
         """
-        with self._driver.session(database=self._settings.database) as s:
+        with self._session() as s:
             result = s.run(query, ids=node_ids, limit=limit)
             rows = [
                 {"id": r["id"], "score": r["score"], **r["props"]}
@@ -173,7 +183,7 @@ class Neo4jClient:
         MATCH (a:KnowledgeNode {id: seed})-[r]-(b:KnowledgeNode {id: target})
         SET r.stability = coalesce(r.stability, $default_stab) + $boost
         """
-        with self._driver.session(database=self._settings.database) as s:
+        with self._session() as s:
             s.run(query, seeds=seeds, found=found,
                   default_stab=DEFAULT_STABILITY, boost=STABILITY_BOOST)
 
@@ -206,7 +216,7 @@ class Neo4jClient:
             r.last_decay_at = toString(datetime())
         RETURN count(r) AS updated
         """
-        with self._driver.session(database=self._settings.database) as s:
+        with self._session() as s:
             s.run(init_query, default_stab=DEFAULT_STABILITY)
             record = s.run(decay_query, default_stab=DEFAULT_STABILITY).single()
             return record["updated"]
@@ -219,6 +229,6 @@ class Neo4jClient:
         DELETE r
         RETURN count(r) AS deleted
         """
-        with self._driver.session(database=self._settings.database) as s:
+        with self._session() as s:
             record = s.run(query, threshold=threshold).single()
             return record["deleted"]
