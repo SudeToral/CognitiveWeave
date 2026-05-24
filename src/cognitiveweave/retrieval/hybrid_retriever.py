@@ -1,11 +1,17 @@
 from __future__ import annotations
 
+import time
 from dataclasses import dataclass, field
 from typing import Any
 
 from cognitiveweave.storage.faiss_index import FAISSIndex
 from cognitiveweave.storage.neo4j_client import Neo4jClient
 from cognitiveweave.storage.temporal import DEFAULT_HALFLIFE, recency_boost_from_iso
+from cognitiveweave.telemetry import (
+    retrieval_duration,
+    retrieval_results_count,
+    tracer,
+)
 
 
 @dataclass
@@ -73,16 +79,37 @@ class HybridRetriever:
             graph_max_hops: Neo4j BFS depth.
             graph_limit:    Neo4j candidate pool size.
         """
-        faiss_results = self._faiss.search(query, top_k=faiss_top_k)
-        graph_results: list[dict[str, Any]] = []
-        if seed_node_ids:
-            graph_results = self._neo4j.structural_search(
-                seed_node_ids,
-                max_hops=graph_max_hops,
-                limit=graph_limit,
-            )
+        t0 = time.monotonic()
+        with tracer.start_as_current_span("hybrid_retrieve") as span:
+            span.set_attribute("query.length", len(query))
+            span.set_attribute("has_seeds", bool(seed_node_ids))
+            span.set_attribute("top_k", top_k)
 
-        return self._fuse(faiss_results, graph_results, top_k=top_k)
+            faiss_results = self._faiss.search(query, top_k=faiss_top_k)
+            span.set_attribute("faiss.candidates", len(faiss_results))
+
+            graph_results: list[dict[str, Any]] = []
+            if seed_node_ids:
+                graph_results = self._neo4j.structural_search(
+                    seed_node_ids,
+                    max_hops=graph_max_hops,
+                    limit=graph_limit,
+                )
+            span.set_attribute("graph.candidates", len(graph_results))
+
+            results = self._fuse(faiss_results, graph_results, top_k=top_k)
+
+            span.set_attribute("results.count", len(results))
+            if results:
+                span.set_attribute("results.top_rrf_score", results[0].rrf_score)
+                span.set_attribute("results.top_temporal_score", results[0].temporal_score)
+
+        elapsed_ms = (time.monotonic() - t0) * 1000
+        attrs = {"has_seeds": str(bool(seed_node_ids))}
+        retrieval_duration.record(elapsed_ms, attrs)
+        retrieval_results_count.record(len(results), attrs)
+
+        return results
 
     # ------------------------------------------------------------------
     # Internal

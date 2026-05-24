@@ -14,6 +14,7 @@ makes emergent belief dynamics possible.
 from __future__ import annotations
 
 import logging
+import time
 import uuid
 from dataclasses import dataclass, field
 from typing import Any
@@ -22,6 +23,15 @@ from cognitiveweave.llm.ollama_client import OllamaClient, _parse_json
 from cognitiveweave.retrieval.hybrid_retriever import HybridRetriever
 from cognitiveweave.storage.faiss_index import FAISSIndex
 from cognitiveweave.storage.neo4j_client import Neo4jClient
+from cognitiveweave.telemetry import (
+    agent_cycle_duration,
+    cosine_distance,
+    cross_pollination_counter,
+    tracer,
+)
+from cognitiveweave.telemetry import (
+    belief_drift as belief_drift_metric,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -41,6 +51,10 @@ class AgentMemory:
     node_ids: list[str] = field(default_factory=list)
     # cycle_num -> list of node ids written that cycle
     cycle_writes: dict[int, list[str]] = field(default_factory=dict)
+    # last belief embedding vector — used to compute drift between cycles
+    last_embedding: list[float] | None = None
+    # cumulative drift across all cycles (sum of per-cycle cosine distances)
+    total_drift: float = 0.0
 
 
 @dataclass
@@ -95,6 +109,23 @@ class SocietyAgent:
 
     def cycle(self, cycle_num: int) -> CycleWrite:
         """Run one experiment cycle. Returns a record of what was written."""
+        t0 = time.monotonic()
+        attrs = {"agent": self.name}
+
+        with tracer.start_as_current_span("agent.cycle") as span:
+            span.set_attribute("agent.name", self.name)
+            span.set_attribute("agent.interest", self.interest[:120])
+            span.set_attribute("cycle.num", cycle_num)
+            span.set_attribute("bandwidth", self.bandwidth)
+
+            result = self._run_cycle(cycle_num, span)
+
+        elapsed_ms = (time.monotonic() - t0) * 1000
+        agent_cycle_duration.record(elapsed_ms, attrs)
+        return result
+
+    def _run_cycle(self, cycle_num: int, span: Any) -> CycleWrite:
+        """Inner cycle logic — separated so the OTel span wraps cleanly."""
         results = self._retriever.retrieve(
             self.interest,
             seed_node_ids=[self._seed] if self._seed else None,
@@ -103,6 +134,7 @@ class SocietyAgent:
 
         if not results:
             logger.warning("SocietyAgent[%s] cycle %d: no results", self.name, cycle_num)
+            span.set_attribute("cycle.skipped", True)
             return CycleWrite(
                 agent=self.name, cycle=cycle_num, node_id=None,
                 belief="", confidence=0.0, read_from=[],
@@ -117,6 +149,31 @@ class SocietyAgent:
 
         belief, confidence = self._synthesize(fragments, cycle_num)
         node_id = self._write(belief, confidence, cycle_num, [r.id for r in results])
+
+        # --- Belief drift: cosine distance from previous cycle's belief ----
+        attrs = {"agent": self.name}
+        if self._faiss is not None:
+            current_vec = self._faiss.encode([belief])[0].tolist()
+            if self.memory.last_embedding is not None:
+                drift = cosine_distance(self.memory.last_embedding, current_vec)
+                self.memory.total_drift += drift
+                belief_drift_metric.record(drift, attrs)
+                span.set_attribute("belief.drift", drift)
+                span.set_attribute("belief.total_drift", self.memory.total_drift)
+                logger.debug("SocietyAgent[%s] cycle %d drift=%.4f", self.name, cycle_num, drift)
+            self.memory.last_embedding = current_vec
+
+        # --- Cross-pollination: count reads from other agents' nodes -------
+        cross_reads = sum(
+            1 for rid in [r.id for r in results]
+            if rid.startswith("exp_") and not rid.startswith(f"exp_{self.name}_")
+        )
+        if cross_reads:
+            cross_pollination_counter.add(cross_reads, attrs)
+            span.set_attribute("cross_pollination.reads", cross_reads)
+
+        span.set_attribute("belief.confidence", confidence)
+        span.set_attribute("node_id", node_id or "")
 
         return CycleWrite(
             agent=self.name,
