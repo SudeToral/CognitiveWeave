@@ -26,6 +26,18 @@ class FAISSIndex:
         self._id_map: list[str] = []
         self._meta_map: dict[str, dict[str, Any]] = {}
 
+    @property
+    def _m(self) -> SentenceTransformer:
+        if self._model is None:
+            raise RuntimeError("FAISSIndex model not loaded — call load_model() first")
+        return self._model
+
+    @property
+    def _idx(self) -> faiss.IndexFlatIP:
+        if self._index is None:
+            raise RuntimeError("FAISSIndex not built — call build_index() or load() first")
+        return self._index
+
     # ------------------------------------------------------------------
     # Lifecycle
     # ------------------------------------------------------------------
@@ -42,7 +54,7 @@ class FAISSIndex:
     def save(self) -> None:
         path = Path(self._settings.index_path)
         path.parent.mkdir(parents=True, exist_ok=True)
-        faiss.write_index(self._index, str(path))
+        faiss.write_index(self._idx, str(path))
         meta_path = path.with_suffix(".meta.json")
         with open(meta_path, "w") as f:
             json.dump({"id_map": self._id_map, "meta_map": self._meta_map}, f)
@@ -61,7 +73,7 @@ class FAISSIndex:
     # ------------------------------------------------------------------
 
     def _embed(self, texts: list[str]) -> np.ndarray:
-        vecs = self._model.encode(texts, normalize_embeddings=True)
+        vecs = self._m.encode(texts, normalize_embeddings=True)
         return vecs.astype("float32")
 
     def encode(self, texts: list[str]) -> np.ndarray:
@@ -70,7 +82,7 @@ class FAISSIndex:
 
     def add(self, node_id: str, text: str, metadata: dict[str, Any] | None = None) -> None:
         vec = self._embed([text])
-        self._index.add(vec)
+        self._idx.add(vec)
         self._id_map.append(node_id)
         self._meta_map[node_id] = metadata or {}
 
@@ -78,7 +90,7 @@ class FAISSIndex:
         """items: list of {id, text, metadata?}"""
         texts = [it["text"] for it in items]
         vecs = self._embed(texts)
-        self._index.add(vecs)
+        self._idx.add(vecs)
         for it in items:
             self._id_map.append(it["id"])
             self._meta_map[it["id"]] = it.get("metadata", {})
@@ -93,10 +105,10 @@ class FAISSIndex:
             self.build_index()
             return
         # Reconstruct remaining vectors
-        all_vecs = np.zeros((self._index.ntotal, self._settings.dimension), dtype="float32")
+        all_vecs = np.zeros((self._idx.ntotal, self._settings.dimension), dtype="float32")
         faiss.extract_index_ivf  # noqa: B018  # just ensure faiss is loaded
-        for i in range(self._index.ntotal):
-            self._index.reconstruct(i, all_vecs[i])
+        for i in range(self._idx.ntotal):
+            self._idx.reconstruct(i, all_vecs[i])
         kept_vecs = all_vecs[keep]
         self._index = faiss.IndexFlatIP(self._settings.dimension)
         self._index.add(kept_vecs)
@@ -117,9 +129,9 @@ class FAISSIndex:
         if not keep_indices:
             self.build_index()
             return len(exp_ids)
-        all_vecs = np.zeros((self._index.ntotal, self._settings.dimension), dtype="float32")
-        for i in range(self._index.ntotal):
-            self._index.reconstruct(i, all_vecs[i])
+        all_vecs = np.zeros((self._idx.ntotal, self._settings.dimension), dtype="float32")
+        for i in range(self._idx.ntotal):
+            self._idx.reconstruct(i, all_vecs[i])
         kept_vecs = all_vecs[keep_indices]
         self._index = faiss.IndexFlatIP(self._settings.dimension)
         self._index.add(kept_vecs)
@@ -134,10 +146,10 @@ class FAISSIndex:
 
     def search(self, query: str, *, top_k: int = 20) -> list[dict[str, Any]]:
         """Return top_k results with cosine similarity scores."""
-        if self._index is None or self._index.ntotal == 0:
+        if self._index is None or self._idx.ntotal == 0:
             return []
         q_vec = self._embed([query])
-        scores, indices = self._index.search(q_vec, min(top_k, self._index.ntotal))
+        scores, indices = self._idx.search(q_vec, min(top_k, self._idx.ntotal))
         results = []
         for score, idx in zip(scores[0], indices[0], strict=False):
             if idx == -1:
@@ -151,4 +163,4 @@ class FAISSIndex:
         return results
 
     def __len__(self) -> int:
-        return self._index.ntotal if self._index else 0
+        return self._idx.ntotal if self._index else 0

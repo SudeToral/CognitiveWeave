@@ -35,6 +35,13 @@ class RedisBus:
         self._settings = settings
         self._redis: Redis | None = None
 
+    @property
+    def _r(self) -> Redis:
+        """Return the active Redis client. Raises RuntimeError if not connected."""
+        if self._redis is None:
+            raise RuntimeError("RedisBus not connected — call connect() first")
+        return self._redis
+
     # ------------------------------------------------------------------
     # Lifecycle
     # ------------------------------------------------------------------
@@ -46,7 +53,7 @@ class RedisBus:
             db=self._settings.db,
             decode_responses=True,
         )
-        await self._redis.ping()
+        await self._redis.ping()  # type: ignore[misc]  # redis-py stub returns Awaitable[bool]|bool
 
     async def close(self) -> None:
         if self._redis:
@@ -67,7 +74,7 @@ class RedisBus:
     async def publish(self, channel: str, event: dict[str, Any]) -> None:
         """Publish to Pub/Sub and append to the audit Stream atomically."""
         payload = json.dumps(event)
-        pipe = self._redis.pipeline()
+        pipe = self._r.pipeline()
         pipe.publish(channel, payload)
         pipe.xadd(STREAM_KEY, {"channel": channel, "payload": payload}, maxlen=10_000)
         await pipe.execute()
@@ -82,7 +89,7 @@ class RedisBus:
         Runs until the task is cancelled — intended to be wrapped in
         asyncio.create_task() by each agent.
         """
-        pubsub: PubSub = self._redis.pubsub()
+        pubsub: PubSub = self._r.pubsub()
         await pubsub.subscribe(channel)
         try:
             async for message in pubsub.listen():
@@ -108,29 +115,29 @@ class RedisBus:
         """
         lock_key = f"{LOCK_PREFIX}{key}"
         lock_val = str(uuid.uuid4())
-        acquired = await self._redis.set(lock_key, lock_val, nx=True, px=ttl_ms)
+        acquired = await self._r.set(lock_key, lock_val, nx=True, px=ttl_ms)
         if not acquired:
             raise RuntimeError(f"Lock contention on {key!r}")
         try:
             yield
         finally:
-            current = await self._redis.get(lock_key)
+            current = await self._r.get(lock_key)
             if current == lock_val:
-                await self._redis.delete(lock_key)
+                await self._r.delete(lock_key)
 
     # ------------------------------------------------------------------
     # Agent state cache
     # ------------------------------------------------------------------
 
     async def set_state(self, key: str, value: Any, ttl: int = 3_600) -> None:
-        await self._redis.set(f"{STATE_PREFIX}{key}", json.dumps(value), ex=ttl)
+        await self._r.set(f"{STATE_PREFIX}{key}", json.dumps(value), ex=ttl)
 
     async def get_state(self, key: str) -> Any | None:
-        raw = await self._redis.get(f"{STATE_PREFIX}{key}")
+        raw = await self._r.get(f"{STATE_PREFIX}{key}")
         return json.loads(raw) if raw else None
 
     async def increment_counter(self, key: str, by: int = 1) -> int:
-        return await self._redis.incrby(f"{STATE_PREFIX}{key}", by)
+        return await self._r.incrby(f"{STATE_PREFIX}{key}", by)
 
     # ------------------------------------------------------------------
     # Stream read (for Monitor)
@@ -138,7 +145,7 @@ class RedisBus:
 
     async def read_stream(self, count: int = 100, last_id: str = "0") -> list[dict[str, Any]]:
         """Read up to `count` entries from the audit stream starting after last_id."""
-        entries = await self._redis.xread({STREAM_KEY: last_id}, count=count)
+        entries = await self._r.xread({STREAM_KEY: last_id}, count=count)
         if not entries:
             return []
         results = []

@@ -140,8 +140,10 @@ def build_mcp_server(
 
         if name == "get_graph_stats":
             with neo4j._session() as s:
-                node_count = (s.run("MATCH (n:KnowledgeNode) RETURN count(n) AS cnt").single() or {}).get("cnt", 0)
-                edge_count = (s.run("MATCH ()-[r]->() RETURN count(r) AS cnt").single() or {}).get("cnt", 0)
+                _nr = s.run("MATCH (n:KnowledgeNode) RETURN count(n) AS cnt").single()
+                _er = s.run("MATCH ()-[r]->() RETURN count(r) AS cnt").single()
+                node_count: int = int(_nr["cnt"]) if _nr else 0
+                edge_count: int = int(_er["cnt"]) if _er else 0
             curator_state = await bus.get_state("curator:last_cycle")
             stats = {
                 "node_count": node_count,

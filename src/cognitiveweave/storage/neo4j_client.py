@@ -86,7 +86,8 @@ class Neo4jClient:
         """
         with self._session() as s:
             result = s.run(query, id=node_id, props=props)
-            return result.single()["id"]
+            record = result.single()
+            return record["id"] if record else node_id
 
     def upsert_edge(
         self,
@@ -219,7 +220,7 @@ class Neo4jClient:
         with self._session() as s:
             s.run(init_query, default_stab=DEFAULT_STABILITY)
             record = s.run(decay_query, default_stab=DEFAULT_STABILITY).single()
-            return record["updated"]
+            return int(record["updated"]) if record else 0
 
     def prune_weak_edges(self, threshold: float = 0.1) -> int:
         """Delete edges whose weight has decayed below threshold."""
@@ -231,4 +232,4 @@ class Neo4jClient:
         """
         with self._session() as s:
             record = s.run(query, threshold=threshold).single()
-            return record["deleted"]
+            return int(record["deleted"]) if record else 0
