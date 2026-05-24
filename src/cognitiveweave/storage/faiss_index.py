@@ -21,7 +21,7 @@ class FAISSIndex:
     def __init__(self, settings: FAISSSettings) -> None:
         self._settings = settings
         self._model: SentenceTransformer | None = None
-        self._index: faiss.IndexFlatIP | None = None
+        self._index: faiss.Index | None = None
         # Ordered list of node ids matching FAISS internal integer indices.
         self._id_map: list[str] = []
         self._meta_map: dict[str, dict[str, Any]] = {}
@@ -33,7 +33,7 @@ class FAISSIndex:
         return self._model
 
     @property
-    def _idx(self) -> faiss.IndexFlatIP:
+    def _idx(self) -> faiss.Index:
         if self._index is None:
             raise RuntimeError("FAISSIndex not built — call build_index() or load() first")
         return self._index
@@ -74,7 +74,7 @@ class FAISSIndex:
 
     def _embed(self, texts: list[str]) -> np.ndarray:
         vecs = self._m.encode(texts, normalize_embeddings=True)
-        return vecs.astype("float32")
+        return np.array(vecs, dtype="float32")
 
     def encode(self, texts: list[str]) -> np.ndarray:
         """Return L2-normalised embeddings for the given texts (float32)."""
