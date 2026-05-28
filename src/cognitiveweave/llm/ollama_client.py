@@ -1,13 +1,13 @@
-"""Async Ollama client for local LLM inference.
+"""LLM client for local inference — OpenAI-compatible /v1/chat/completions.
 
-Used by ReconcilerAgent and EpistemologistAgent. Both agents call Ollama
+Used by ReconcilerAgent and EpistemologistAgent. Both agents call the LLM
 from within a ThreadPoolExecutor (via run_in_thread), so this client uses
 a synchronous httpx.Client internally — one client per thread is safe.
 
-If Ollama is unreachable or returns an error, methods return a fallback
+If the endpoint is unreachable or returns an error, methods return a fallback
 value rather than raising, so agent loops are never killed by LLM issues.
 
-API: Ollama /api/chat — JSON request/response over HTTP.
+Compatible with: llama.cpp server, vLLM, LM Studio, Ollama (/v1 endpoint).
 """
 from __future__ import annotations
 
@@ -119,7 +119,7 @@ class OllamaClient:
     # ------------------------------------------------------------------
 
     def _chat(self, system: str, user: str) -> str:
-        """Send a chat request to Ollama. Returns raw response string."""
+        """Send a chat request via OpenAI-compatible API. Returns raw response string."""
         payload = {
             "model": self._settings.model,
             "messages": [
@@ -127,13 +127,14 @@ class OllamaClient:
                 {"role": "user", "content": user},
             ],
             "stream": False,
+            "max_tokens": 512,
         }
         try:
-            resp = self._client.post("/api/chat", json=payload)
+            resp = self._client.post("/v1/chat/completions", json=payload)
             resp.raise_for_status()
             data = resp.json()
-            return data["message"]["content"]
-        except (httpx.HTTPError, KeyError, json.JSONDecodeError) as e:
+            return data["choices"][0]["message"]["content"]
+        except (httpx.HTTPError, KeyError, IndexError, json.JSONDecodeError) as e:
             logger.error("OllamaClient._chat error: %s", e)
             return ""
 

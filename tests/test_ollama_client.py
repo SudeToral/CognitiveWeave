@@ -12,7 +12,7 @@ from cognitiveweave.llm.ollama_client import OllamaClient, _parse_json
 def make_response(content: str, status: int = 200):
     resp = MagicMock()
     resp.status_code = status
-    resp.json.return_value = {"message": {"content": content}}
+    resp.json.return_value = {"choices": [{"message": {"content": content}}]}
     resp.raise_for_status = MagicMock()
     return resp
 

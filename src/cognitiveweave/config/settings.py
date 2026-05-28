@@ -26,9 +26,9 @@ class FAISSSettings:
 
 @dataclass
 class OllamaSettings:
-    base_url: str = field(default_factory=lambda: os.getenv("OLLAMA_URL", "http://localhost:11434"))
-    model: str = field(default_factory=lambda: os.getenv("OLLAMA_MODEL", "qwen2.5:3b"))
-    timeout: float = 30.0
+    base_url: str = field(default_factory=lambda: os.getenv("OLLAMA_URL", "http://100.98.163.58:8000"))
+    model: str = field(default_factory=lambda: os.getenv("OLLAMA_MODEL", "Qwen2.5-3B-Instruct-Q4_K_M.gguf"))
+    timeout: float = 60.0
 
 
 @dataclass
