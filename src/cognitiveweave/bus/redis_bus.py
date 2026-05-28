@@ -145,12 +145,14 @@ class RedisBus:
 
     async def read_stream(self, count: int = 100, last_id: str = "0") -> list[dict[str, Any]]:
         """Read up to `count` entries from the audit stream starting after last_id."""
-        entries = await self._r.xread({STREAM_KEY: last_id}, count=count)
-        if not entries:
+        raw: Any = await self._r.xread({STREAM_KEY: last_id}, count=count)
+        if not raw:
             return []
         results = []
-        for _stream, messages in entries:
-            for msg_id, fields in messages:
+        for stream_entry in raw:
+            _stream, messages = stream_entry[0], stream_entry[1]
+            for msg in messages:
+                msg_id, fields = msg[0], msg[1]
                 results.append({
                     "id": msg_id,
                     "channel": fields["channel"],
