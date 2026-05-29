@@ -12,6 +12,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 import streamlit as st
 import plotly.graph_objects as go
 import plotly.express as px
+from streamlit_agraph import agraph, Node, Edge, Config
 
 from cognitiveweave.config.settings import Settings
 from cognitiveweave.storage.neo4j_client import Neo4jClient
@@ -19,8 +20,16 @@ from cognitiveweave.storage.faiss_index import FAISSIndex
 from cognitiveweave.retrieval.hybrid_retriever import HybridRetriever
 from cognitiveweave.llm.ollama_client import OllamaClient
 from cognitiveweave.experiments.agent import SocietyAgent
+from cognitiveweave.experiments.epistemic_monitor import EpistemicMonitor
 from cognitiveweave.experiments.population import AgentPopulation
 from cognitiveweave.experiments.observer import ExperimentObserver
+from cognitiveweave.telemetry import setup_telemetry
+
+# Telemetry: Jaeger varsa gönder, yoksa sessizce devam et
+try:
+    setup_telemetry(console_fallback=False)
+except Exception:
+    pass
 
 st.set_page_config(
     page_title="CognitiveWeave",
@@ -36,6 +45,153 @@ st.markdown("""
   }
 </style>
 """, unsafe_allow_html=True)
+
+# ---------------------------------------------------------------------------
+# Epistemic Graph Visualization
+# ---------------------------------------------------------------------------
+
+_AGENT_COLORS = {
+    "Mira": "#89b4fa",   # blue
+    "Kael": "#a6e3a1",   # green
+    "Sova": "#fab387",   # orange
+}
+_BASE_COLOR    = "#585b70"   # muted gray for knowledge nodes
+_SYSTEM_COLOR  = "#f38ba8"   # red for system state node
+_CROSS_COLOR   = "#f9e2af"   # yellow for cross-pollination edges
+
+
+def build_epistemic_graph(
+    neo4j: Neo4jClient,
+    agent_colors: dict[str, str],
+    max_nodes: int = 80,
+) -> tuple[list[Node], list[Edge]]:
+    """Query Neo4j and build agraph Node/Edge lists for the live graph view."""
+
+    # 1 — fetch experiment nodes
+    exp_query = """
+    MATCH (n:KnowledgeNode {cluster: 'experiment'})
+    RETURN n.id AS id, n.source AS source, n.content AS content,
+           n.confidence AS confidence, n.cycle AS cycle
+    ORDER BY n.cycle ASC
+    LIMIT $limit
+    """
+    # 2 — fetch base knowledge nodes referenced by experiment nodes
+    base_query = """
+    MATCH (exp:KnowledgeNode {cluster: 'experiment'})-[:DERIVED_FROM]->(base:KnowledgeNode)
+    WHERE base.cluster <> 'experiment'
+    RETURN DISTINCT base.id AS id, base.content AS content
+    LIMIT 40
+    """
+    # 3 — fetch edges
+    edge_query = """
+    MATCH (a:KnowledgeNode {cluster: 'experiment'})-[r:DERIVED_FROM]->(b:KnowledgeNode)
+    RETURN a.id AS src, b.id AS tgt, a.source AS src_agent, b.source AS tgt_agent,
+           b.cluster AS tgt_cluster
+    LIMIT 200
+    """
+    # 4 — system state node
+    system_query = """
+    MATCH (n:KnowledgeNode {cluster: 'system'})
+    RETURN n.id AS id, n.entropy AS entropy, n.regime AS regime
+    LIMIT 1
+    """
+
+    nodes: list[Node] = []
+    edges: list[Edge] = []
+    seen_ids: set[str] = set()
+
+    with neo4j._session() as s:
+        # Experiment nodes
+        for row in s.run(exp_query, limit=max_nodes):
+            nid     = row["id"]
+            source  = row["source"] or "unknown"
+            conf    = float(row["confidence"] or 0.6)
+            content = (row["content"] or "")[:60]
+            color   = agent_colors.get(source, "#cdd6f4")
+            size    = 14 + int(conf * 10)
+            nodes.append(Node(
+                id=nid, label=source,
+                title=f"[{source}] {content}",
+                size=size, color=color,
+                font={"color": "#cdd6f4", "size": 10},
+            ))
+            seen_ids.add(nid)
+
+        # Base knowledge nodes
+        for row in s.run(base_query):
+            nid     = row["id"]
+            content = (row["content"] or nid)[:40]
+            if nid not in seen_ids:
+                nodes.append(Node(
+                    id=nid, label=nid.split("_")[-1],
+                    title=content,
+                    size=8, color=_BASE_COLOR,
+                    font={"color": "#9399b2", "size": 9},
+                ))
+                seen_ids.add(nid)
+
+        # System state node
+        sys_row = s.run(system_query).single()
+        if sys_row:
+            entropy = float(sys_row["entropy"] or 0)
+            regime  = sys_row["regime"] or "healthy"
+            nodes.append(Node(
+                id="system:epistemic_state",
+                label=f"Σ {regime}",
+                title=f"System entropy: {entropy:.3f} | {regime}",
+                size=22, color=_SYSTEM_COLOR,
+                font={"color": "#cdd6f4", "size": 11, "bold": True},
+            ))
+            seen_ids.add("system:epistemic_state")
+
+        # Edges
+        for row in s.run(edge_query):
+            src, tgt = row["src"], row["tgt"]
+            if src not in seen_ids or tgt not in seen_ids:
+                continue
+            src_agent = row["src_agent"] or ""
+            tgt_agent = row["tgt_agent"] or ""
+            is_cross  = src_agent and tgt_agent and src_agent != tgt_agent
+            edges.append(Edge(
+                source=src, target=tgt,
+                color=_CROSS_COLOR if is_cross else "#45475a",
+                width=2.5 if is_cross else 1.0,
+            ))
+
+    return nodes, edges
+
+
+def entropy_gauge(entropy: float, regime: str) -> go.Figure:
+    """Plotly indicator gauge for system entropy."""
+    color = {"homogenizing": "#89b4fa", "healthy": "#a6e3a1", "diverging": "#f38ba8"}.get(
+        regime, "#cdd6f4"
+    )
+    fig = go.Figure(go.Indicator(
+        mode="gauge+number",
+        value=round(entropy, 3),
+        title={"text": f"Epistemic Entropy<br><span style='font-size:0.8em;color:{color}'>{regime}</span>"},
+        gauge={
+            "axis": {"range": [0, 1], "tickcolor": "#cdd6f4"},
+            "bar":  {"color": color},
+            "steps": [
+                {"range": [0.00, 0.15], "color": "#313244"},
+                {"range": [0.15, 0.60], "color": "#1e1e2e"},
+                {"range": [0.60, 1.00], "color": "#313244"},
+            ],
+            "threshold": {
+                "line": {"color": "#f9e2af", "width": 3},
+                "thickness": 0.75,
+                "value": entropy,
+            },
+        },
+        number={"font": {"color": "#cdd6f4"}},
+    ))
+    fig.update_layout(
+        height=220, margin=dict(t=60, b=10, l=20, r=20),
+        paper_bgcolor="rgba(0,0,0,0)", font_color="#cdd6f4",
+    )
+    return fig
+
 
 TOPICS = {
     "Memory Biology": {
@@ -527,10 +683,14 @@ elif page == "Graph Stats":
         clusters = [r["cluster"].replace("_", " ").title() if r["cluster"] else "Other" for r in rows]
         counts   = [r["cnt"] for r in rows]
 
-        fig1 = px.bar(x=clusters, y=counts,
-                      labels={"x": "", "y": "Concepts"},
-                      title="Concepts per domain",
-                      color=clusters, color_discrete_sequence=px.colors.qualitative.Pastel)
+        import pandas as pd
+        fig1 = px.bar(
+            pd.DataFrame({"Domain": clusters, "Concepts": counts}),
+            x="Domain", y="Concepts",
+            title="Concepts per domain",
+            color="Domain",
+            color_discrete_sequence=px.colors.qualitative.Pastel,
+        )
         fig1.update_layout(
             paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
             font_color="#cdd6f4", showlegend=False, height=320,
@@ -647,7 +807,8 @@ elif page == "Belief Dynamics":
             ]
             st.session_state["exp_shared_faiss"] = shared_faiss
             observer   = ExperimentObserver(neo4j, database=settings.neo4j.database)
-            population = AgentPopulation(agents)
+            monitor    = EpistemicMonitor(neo4j)
+            population = AgentPopulation(agents, monitor=monitor)
             st.session_state["exp_population"] = population
             st.session_state["exp_observer"]   = observer
             st.session_state["exp_snapshots"]  = []
@@ -734,6 +895,67 @@ elif page == "Belief Dynamics":
     if not snapshots:
         st.info("No cycles run yet.")
         st.stop()
+
+    # ── live epistemic graph ─────────────────────────────────────────────────
+    st.divider()
+    st.markdown("### Live Epistemic Graph")
+    st.caption(
+        "Colored nodes = agent beliefs. Gray nodes = base knowledge. "
+        "**Yellow edges** = cross-pollination (one agent built on another's belief). "
+        "Red node = system entropy state."
+    )
+
+    graph_col, gauge_col = st.columns([3, 1])
+
+    with graph_col:
+        try:
+            g_nodes, g_edges = build_epistemic_graph(
+                neo4j, _AGENT_COLORS, max_nodes=80
+            )
+            if g_nodes:
+                config = Config(
+                    width="100%", height=480,
+                    directed=True, physics=True,
+                    hierarchical=False,
+                    nodeHighlightBehavior=True,
+                    highlightColor="#f9e2af",
+                    backgroundColor="#1e1e2e",
+                    node={"labelProperty": "label"},
+                    link={"renderLabel": False},
+                )
+                agraph(nodes=g_nodes, edges=g_edges, config=config)
+            else:
+                st.info("Run at least one cycle to see the graph.")
+        except Exception as e:
+            st.warning(f"Graph unavailable: {e}")
+
+    with gauge_col:
+        # Entropy gauge — read from monitor history or graph
+        from cognitiveweave.experiments.epistemic_monitor import read_epistemic_signal
+        signal = read_epistemic_signal(neo4j)
+        entropy = signal.get("entropy", 0.0)
+        regime  = signal.get("regime", "healthy")
+        st.plotly_chart(
+            entropy_gauge(entropy, regime),
+            use_container_width=True,
+        )
+
+        # Agent status cards
+        st.markdown("**Agent status**")
+        latest_snap = snapshots[-1] if snapshots else None
+        for preset in AGENT_PRESETS:
+            name  = preset["name"]
+            color = preset["color"]
+            count = latest_snap.node_counts.get(name, 0) if latest_snap else 0
+            cross = latest_snap.cross_reads.get(name, 0) if latest_snap else 0
+            st.markdown(
+                f"<div style='background:#313244;border-left:4px solid {color};"
+                f"padding:8px 12px;border-radius:6px;margin-bottom:6px'>"
+                f"<b style='color:{color}'>{name}</b><br>"
+                f"<span style='font-size:0.8em;color:#cdd6f4'>"
+                f"Beliefs: {count} &nbsp;|&nbsp; Cross-pol: {cross}</span></div>",
+                unsafe_allow_html=True,
+            )
 
     # ── metrics over time ────────────────────────────────────────────────────
     st.divider()

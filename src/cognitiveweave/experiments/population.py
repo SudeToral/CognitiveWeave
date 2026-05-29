@@ -11,9 +11,13 @@ The history is kept in memory so the observer can compute metrics later.
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
 
 from cognitiveweave.experiments.agent import CycleWrite, SocietyAgent
+
+if TYPE_CHECKING:
+    from cognitiveweave.experiments.epistemic_monitor import EpistemicMonitor
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +26,8 @@ logger = logging.getLogger(__name__)
 class CycleResult:
     cycle: int
     writes: list[CycleWrite]
+    entropy: float | None = field(default=None)   # system entropy this cycle
+    regime: str | None = field(default=None)
 
     @property
     def successful_writes(self) -> list[CycleWrite]:
@@ -32,11 +38,19 @@ class AgentPopulation:
     """Manages a group of SocietyAgents and runs experiment cycles.
 
     Args:
-        agents: The agents participating in this experiment.
+        agents:  The agents participating in this experiment.
+        monitor: Optional EpistemicMonitor — computes entropy after each cycle
+                 and writes it to the graph so agents can adapt next cycle.
     """
 
-    def __init__(self, agents: list[SocietyAgent]) -> None:
+    def __init__(
+        self,
+        agents: list[SocietyAgent],
+        *,
+        monitor: EpistemicMonitor | None = None,
+    ) -> None:
         self.agents = agents
+        self.monitor = monitor
         self.history: list[CycleResult] = []
 
     # ------------------------------------------------------------------
@@ -44,7 +58,7 @@ class AgentPopulation:
     # ------------------------------------------------------------------
 
     def run_cycle(self, cycle_num: int) -> CycleResult:
-        """Run all agents for one cycle. Returns the combined result."""
+        """Run all agents for one cycle, then update epistemic state."""
         writes: list[CycleWrite] = []
         for agent in self.agents:
             try:
@@ -58,7 +72,25 @@ class AgentPopulation:
                 logger.exception(
                     "Population cycle %d: agent %s crashed", cycle_num, agent.name
                 )
+
         result = CycleResult(cycle=cycle_num, writes=writes)
+
+        # After all agents write, compute entropy and publish to graph
+        # so agents can adapt their behavior in the NEXT cycle.
+        if self.monitor is not None:
+            successful = result.successful_writes
+            if successful:
+                beliefs = {w.agent: w.belief for w in successful if w.belief}
+                faiss = next(
+                    (a._faiss for a in self.agents if a._faiss is not None), None
+                )
+                if beliefs and faiss is not None:
+                    from cognitiveweave.telemetry import system_entropy as entropy_metric
+                    state = self.monitor.observe(cycle_num, beliefs, faiss.encode)
+                    entropy_metric.record(state.entropy, {"regime": state.regime})
+                    result.entropy = state.entropy
+                    result.regime = state.regime
+
         self.history.append(result)
         return result
 

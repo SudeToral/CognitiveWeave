@@ -87,6 +87,14 @@ decay_edges_updated = meter.create_counter(
     description="Total edges updated by Ebbinghaus decay cycles",
 )
 
+system_entropy = meter.create_histogram(
+    "cw.system.entropy",
+    description=(
+        "Mean pairwise cosine distance between agent belief embeddings per cycle. "
+        "0=homogenized, 0.5=healthy diversity, 1=max divergence."
+    ),
+)
+
 
 # ---------------------------------------------------------------------------
 # Setup
@@ -125,7 +133,7 @@ def setup_telemetry(
     global tracer, meter  # noqa: PLW0603
     global retrieval_duration, retrieval_results_count
     global agent_cycle_duration, belief_drift
-    global cross_pollination_counter, decay_edges_updated
+    global cross_pollination_counter, decay_edges_updated, system_entropy
 
     tracer = trace.get_tracer(_SERVICE_NAME)
     meter = metrics.get_meter(_SERVICE_NAME)
@@ -136,6 +144,7 @@ def setup_telemetry(
     belief_drift = meter.create_histogram("cw.agent.belief_drift")
     cross_pollination_counter = meter.create_counter("cw.cross_pollination.total")
     decay_edges_updated = meter.create_counter("cw.graph.decay.edges_updated")
+    system_entropy = meter.create_histogram("cw.system.entropy")
 
     logger.info("OpenTelemetry configured → %s", endpoint)
 

@@ -12,9 +12,11 @@ dependencies = [
     "opentelemetry-exporter-otlp-proto-grpc>=1.42.1",
     "opentelemetry-sdk>=1.42.1",
     "plotly>=6.6.0",
+    "python-dotenv>=1.2.2",
     "redis>=7.2.1",
     "sentence-transformers>=5.2.3",
     "streamlit>=1.55.0",
+    "streamlit-agraph>=0.0.45",
 ]
 
 [dependency-groups]

@@ -1,5 +1,14 @@
 import os
 from dataclasses import dataclass, field
+from pathlib import Path
+
+from dotenv import load_dotenv
+
+# .env.local → .env → ortam değişkenleri sırasıyla yükle
+# override=False: zaten set edilmiş ortam değişkenleri korunur
+_root = Path(__file__).resolve().parent.parent.parent.parent
+load_dotenv(_root / ".env.local", override=False)
+load_dotenv(_root / ".env", override=False)
 
 
 @dataclass

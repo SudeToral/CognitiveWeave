@@ -7,6 +7,7 @@ from typing import Any
 from cognitiveweave.agents.base import BaseAgent
 from cognitiveweave.bus.redis_bus import CH_CURATOR, RedisBus
 from cognitiveweave.storage.neo4j_client import Neo4jClient
+from cognitiveweave.telemetry import decay_edges_updated, tracer
 
 logger = logging.getLogger(__name__)
 
@@ -42,12 +43,15 @@ class CuratorAgent(BaseAgent):
     async def _run_decay_cycle(self) -> None:
         logger.info("CuratorAgent: starting decay cycle")
 
-        # decay_edge_weights uses Ebbinghaus formula — no factor argument
-        decayed = await self.run_in_thread(self._neo4j.decay_edge_weights)
-        pruned = await self.run_in_thread(
-            self._neo4j.prune_weak_edges, self._prune_threshold
-        )
+        with tracer.start_as_current_span("curator.decay_cycle") as span:
+            decayed = await self.run_in_thread(self._neo4j.decay_edge_weights)
+            pruned = await self.run_in_thread(
+                self._neo4j.prune_weak_edges, self._prune_threshold
+            )
+            span.set_attribute("edges.decayed", decayed)
+            span.set_attribute("edges.pruned", pruned)
 
+        decay_edges_updated.add(decayed)
         stats = {"type": "decay:complete", "decayed_edges": decayed, "pruned_edges": pruned}
         await self._bus.set_state("curator:last_cycle", stats)
         await self.emit(CH_CURATOR, stats)

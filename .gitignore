@@ -52,3 +52,4 @@ k8s/app/secret.yaml
 # Logs
 *.log
 logs/
+.env.local

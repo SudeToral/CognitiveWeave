@@ -19,6 +19,7 @@ import uuid
 from dataclasses import dataclass, field
 from typing import Any
 
+from cognitiveweave.experiments.epistemic_monitor import read_epistemic_signal
 from cognitiveweave.llm.ollama_client import OllamaClient, _parse_json
 from cognitiveweave.retrieval.hybrid_retriever import HybridRetriever
 from cognitiveweave.storage.faiss_index import FAISSIndex
@@ -96,7 +97,9 @@ class SocietyAgent:
         self.name = name
         self.interest = interest
         self.bandwidth = bandwidth
+        self._base_bandwidth = bandwidth   # original value — adaptation resets to this
         self._seed = seed_node_id
+        self._original_seed = seed_node_id
         self._retriever = retriever
         self._neo4j = neo4j
         self._ollama = ollama
@@ -112,6 +115,9 @@ class SocietyAgent:
         t0 = time.monotonic()
         attrs = {"agent": self.name}
 
+        # Read system entropy and adapt before executing
+        self._adapt_to_epistemic_state(cycle_num)
+
         with tracer.start_as_current_span("agent.cycle") as span:
             span.set_attribute("agent.name", self.name)
             span.set_attribute("agent.interest", self.interest[:120])
@@ -123,6 +129,28 @@ class SocietyAgent:
         elapsed_ms = (time.monotonic() - t0) * 1000
         agent_cycle_duration.record(elapsed_ms, attrs)
         return result
+
+    def _adapt_to_epistemic_state(self, cycle_num: int) -> None:
+        """Read system entropy from graph and adjust bandwidth accordingly.
+
+        homogenizing → bandwidth up (explore more, break out of echo chamber)
+        diverging     → bandwidth down (consolidate, focus on consensus nodes)
+        healthy       → reset to base bandwidth
+        """
+        if cycle_num == 0:
+            return  # no signal yet on first cycle
+
+        signal = read_epistemic_signal(self._neo4j)
+        regime = signal.get("regime", "healthy")
+
+        if regime == "homogenizing":
+            self.bandwidth = min(self._base_bandwidth + 3, 15)
+            logger.debug("Agent[%s] homogenizing → bandwidth=%d", self.name, self.bandwidth)
+        elif regime == "diverging":
+            self.bandwidth = max(self._base_bandwidth - 2, 2)
+            logger.debug("Agent[%s] diverging → bandwidth=%d", self.name, self.bandwidth)
+        else:
+            self.bandwidth = self._base_bandwidth
 
     def _run_cycle(self, cycle_num: int, span: Any) -> CycleWrite:
         """Inner cycle logic — separated so the OTel span wraps cleanly."""
