@@ -93,17 +93,20 @@ class SocietyAgent:
         bandwidth: int = 5,
         seed_node_id: str | None = None,
         faiss: FAISSIndex | None = None,
+        bridge_seeds: list[str] | None = None,
     ) -> None:
         self.name = name
         self.interest = interest
         self.bandwidth = bandwidth
-        self._base_bandwidth = bandwidth   # original value — adaptation resets to this
+        self._base_bandwidth = bandwidth
         self._seed = seed_node_id
         self._original_seed = seed_node_id
         self._retriever = retriever
         self._neo4j = neo4j
         self._ollama = ollama
         self._faiss = faiss
+        self._bridge_seeds = bridge_seeds or []  # Condition C: bridge nodes to migrate to
+        self._cycles_isolated = 0               # consecutive cycles with 0 cross-pol
         self.memory = AgentMemory()
 
     # ------------------------------------------------------------------
@@ -131,26 +134,55 @@ class SocietyAgent:
         return result
 
     def _adapt_to_epistemic_state(self, cycle_num: int) -> None:
-        """Read system entropy from graph and adjust bandwidth accordingly.
+        """Read system entropy from graph and adjust behaviour.
 
-        homogenizing → bandwidth up (explore more, break out of echo chamber)
-        diverging     → bandwidth down (consolidate, focus on consensus nodes)
-        healthy       → reset to base bandwidth
+        Standard regulation (Condition B):
+          homogenizing → bandwidth ↑  (escape echo chamber)
+          diverging     → bandwidth ↓  (consolidate)
+          healthy       → reset
+
+        Smart regulation (Condition C, activated when bridge_seeds are set):
+          homogenizing → bandwidth ↑  (same)
+          diverging + population isolated → migrate seed to bridge node
+          diverging + cross-pol exists   → mild bandwidth ↓
+          healthy       → reset seed + bandwidth
         """
         if cycle_num == 0:
-            return  # no signal yet on first cycle
+            return
 
         signal = read_epistemic_signal(self._neo4j)
-        regime = signal.get("regime", "healthy")
+        regime         = signal.get("regime", "healthy")
+        isolation_rate = float(signal.get("isolation_rate", 0.0))
 
         if regime == "homogenizing":
             self.bandwidth = min(self._base_bandwidth + 3, 15)
             logger.debug("Agent[%s] homogenizing → bandwidth=%d", self.name, self.bandwidth)
+
         elif regime == "diverging":
-            self.bandwidth = max(self._base_bandwidth - 2, 2)
-            logger.debug("Agent[%s] diverging → bandwidth=%d", self.name, self.bandwidth)
+            if self._bridge_seeds and isolation_rate > 0.5:
+                # Condition C: population is isolated AND diverging
+                # → migrate to a bridge node to enable cross-pollination
+                self._cycles_isolated += 1
+                if self._cycles_isolated >= 2:   # wait 2 cycles before migrating
+                    import random
+                    new_seed = random.choice(self._bridge_seeds)
+                    if new_seed != self._seed:
+                        logger.debug(
+                            "Agent[%s] isolated+diverging → seed %s → %s",
+                            self.name, self._seed, new_seed,
+                        )
+                        self._seed = new_seed
+                        self._cycles_isolated = 0
+            else:
+                # Standard Condition B: reduce bandwidth
+                self.bandwidth = max(self._base_bandwidth - 2, 2)
+                logger.debug("Agent[%s] diverging → bandwidth=%d", self.name, self.bandwidth)
+
         else:
+            # healthy — reset to base
             self.bandwidth = self._base_bandwidth
+            self._seed = self._original_seed   # return to home seed
+            self._cycles_isolated = 0
 
     def _run_cycle(self, cycle_num: int, span: Any) -> CycleWrite:
         """Inner cycle logic — separated so the OTel span wraps cleanly."""

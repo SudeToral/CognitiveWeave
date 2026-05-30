@@ -1,0 +1,367 @@
+{
+  "condition": "A",
+  "run_id": 5,
+  "wall_time_s": 471.70306174998404,
+  "cycles": [
+    {
+      "cycle": 0,
+      "entropy": 0.6471613225837548,
+      "regime": "unregulated",
+      "isolation": 1.0,
+      "cross_pollination": {
+        "A1": 0,
+        "A2": 0,
+        "A3": 0,
+        "A4": 0,
+        "A5": 0,
+        "A6": 0,
+        "A7": 0,
+        "A8": 0,
+        "A9": 0,
+        "A10": 0
+      }
+    },
+    {
+      "cycle": 1,
+      "entropy": 0.6475462365481589,
+      "regime": "unregulated",
+      "isolation": 0.9,
+      "cross_pollination": {
+        "A1": 0,
+        "A2": 1,
+        "A3": 0,
+        "A4": 0,
+        "A5": 0,
+        "A6": 0,
+        "A7": 0,
+        "A8": 0,
+        "A9": 0,
+        "A10": 0
+      }
+    },
+    {
+      "cycle": 2,
+      "entropy": 0.6390482962131501,
+      "regime": "unregulated",
+      "isolation": 0.8,
+      "cross_pollination": {
+        "A1": 1,
+        "A2": 2,
+        "A3": 0,
+        "A4": 0,
+        "A5": 0,
+        "A6": 0,
+        "A7": 0,
+        "A8": 0,
+        "A9": 0,
+        "A10": 0
+      }
+    },
+    {
+      "cycle": 3,
+      "entropy": 0.6516537136501737,
+      "regime": "unregulated",
+      "isolation": 0.8,
+      "cross_pollination": {
+        "A1": 1,
+        "A2": 3,
+        "A3": 0,
+        "A4": 0,
+        "A5": 0,
+        "A6": 0,
+        "A7": 0,
+        "A8": 0,
+        "A9": 0,
+        "A10": 0
+      }
+    },
+    {
+      "cycle": 4,
+      "entropy": 0.6491151235997676,
+      "regime": "unregulated",
+      "isolation": 0.8,
+      "cross_pollination": {
+        "A1": 1,
+        "A2": 3,
+        "A3": 0,
+        "A4": 0,
+        "A5": 0,
+        "A6": 0,
+        "A7": 0,
+        "A8": 0,
+        "A9": 0,
+        "A10": 0
+      }
+    },
+    {
+      "cycle": 5,
+      "entropy": 0.6572269606921408,
+      "regime": "unregulated",
+      "isolation": 0.8,
+      "cross_pollination": {
+        "A1": 1,
+        "A2": 3,
+        "A3": 0,
+        "A4": 0,
+        "A5": 0,
+        "A6": 0,
+        "A7": 0,
+        "A8": 0,
+        "A9": 0,
+        "A10": 0
+      }
+    },
+    {
+      "cycle": 6,
+      "entropy": 0.6542553800261683,
+      "regime": "unregulated",
+      "isolation": 0.8,
+      "cross_pollination": {
+        "A1": 1,
+        "A2": 3,
+        "A3": 0,
+        "A4": 0,
+        "A5": 0,
+        "A6": 0,
+        "A7": 0,
+        "A8": 0,
+        "A9": 0,
+        "A10": 0
+      }
+    },
+    {
+      "cycle": 7,
+      "entropy": 0.6374043888515897,
+      "regime": "unregulated",
+      "isolation": 0.8,
+      "cross_pollination": {
+        "A1": 1,
+        "A2": 3,
+        "A3": 0,
+        "A4": 0,
+        "A5": 0,
+        "A6": 0,
+        "A7": 0,
+        "A8": 0,
+        "A9": 0,
+        "A10": 0
+      }
+    },
+    {
+      "cycle": 8,
+      "entropy": 0.6606917100855045,
+      "regime": "unregulated",
+      "isolation": 0.8,
+      "cross_pollination": {
+        "A1": 1,
+        "A2": 3,
+        "A3": 0,
+        "A4": 0,
+        "A5": 0,
+        "A6": 0,
+        "A7": 0,
+        "A8": 0,
+        "A9": 0,
+        "A10": 0
+      }
+    },
+    {
+      "cycle": 9,
+      "entropy": 0.6419491468204392,
+      "regime": "unregulated",
+      "isolation": 0.8,
+      "cross_pollination": {
+        "A1": 1,
+        "A2": 3,
+        "A3": 0,
+        "A4": 0,
+        "A5": 0,
+        "A6": 0,
+        "A7": 0,
+        "A8": 0,
+        "A9": 0,
+        "A10": 0
+      }
+    },
+    {
+      "cycle": 10,
+      "entropy": 0.6541649862296052,
+      "regime": "unregulated",
+      "isolation": 0.8,
+      "cross_pollination": {
+        "A1": 1,
+        "A2": 3,
+        "A3": 0,
+        "A4": 0,
+        "A5": 0,
+        "A6": 0,
+        "A7": 0,
+        "A8": 0,
+        "A9": 0,
+        "A10": 0
+      }
+    },
+    {
+      "cycle": 11,
+      "entropy": 0.6730131747201085,
+      "regime": "unregulated",
+      "isolation": 0.8,
+      "cross_pollination": {
+        "A1": 1,
+        "A2": 3,
+        "A3": 0,
+        "A4": 0,
+        "A5": 0,
+        "A6": 0,
+        "A7": 0,
+        "A8": 0,
+        "A9": 0,
+        "A10": 0
+      }
+    },
+    {
+      "cycle": 12,
+      "entropy": 0.650197405864795,
+      "regime": "unregulated",
+      "isolation": 0.8,
+      "cross_pollination": {
+        "A1": 1,
+        "A2": 3,
+        "A3": 0,
+        "A4": 0,
+        "A5": 0,
+        "A6": 0,
+        "A7": 0,
+        "A8": 0,
+        "A9": 0,
+        "A10": 0
+      }
+    },
+    {
+      "cycle": 13,
+      "entropy": 0.659973967820406,
+      "regime": "unregulated",
+      "isolation": 0.8,
+      "cross_pollination": {
+        "A1": 1,
+        "A2": 3,
+        "A3": 0,
+        "A4": 0,
+        "A5": 0,
+        "A6": 0,
+        "A7": 0,
+        "A8": 0,
+        "A9": 0,
+        "A10": 0
+      }
+    },
+    {
+      "cycle": 14,
+      "entropy": 0.656597318748633,
+      "regime": "unregulated",
+      "isolation": 0.8,
+      "cross_pollination": {
+        "A1": 1,
+        "A2": 3,
+        "A3": 0,
+        "A4": 0,
+        "A5": 0,
+        "A6": 0,
+        "A7": 0,
+        "A8": 0,
+        "A9": 0,
+        "A10": 0
+      }
+    },
+    {
+      "cycle": 15,
+      "entropy": 0.6555892692671882,
+      "regime": "unregulated",
+      "isolation": 0.8,
+      "cross_pollination": {
+        "A1": 1,
+        "A2": 3,
+        "A3": 0,
+        "A4": 0,
+        "A5": 0,
+        "A6": 0,
+        "A7": 0,
+        "A8": 0,
+        "A9": 0,
+        "A10": 0
+      }
+    },
+    {
+      "cycle": 16,
+      "entropy": 0.6492336715261141,
+      "regime": "unregulated",
+      "isolation": 0.8,
+      "cross_pollination": {
+        "A1": 1,
+        "A2": 3,
+        "A3": 0,
+        "A4": 0,
+        "A5": 0,
+        "A6": 0,
+        "A7": 0,
+        "A8": 0,
+        "A9": 0,
+        "A10": 0
+      }
+    },
+    {
+      "cycle": 17,
+      "entropy": 0.6544677818814914,
+      "regime": "unregulated",
+      "isolation": 0.8,
+      "cross_pollination": {
+        "A1": 1,
+        "A2": 3,
+        "A3": 0,
+        "A4": 0,
+        "A5": 0,
+        "A6": 0,
+        "A7": 0,
+        "A8": 0,
+        "A9": 0,
+        "A10": 0
+      }
+    },
+    {
+      "cycle": 18,
+      "entropy": 0.6554829650455051,
+      "regime": "unregulated",
+      "isolation": 0.8,
+      "cross_pollination": {
+        "A1": 1,
+        "A2": 3,
+        "A3": 0,
+        "A4": 0,
+        "A5": 0,
+        "A6": 0,
+        "A7": 0,
+        "A8": 0,
+        "A9": 0,
+        "A10": 0
+      }
+    },
+    {
+      "cycle": 19,
+      "entropy": 0.6484172440237469,
+      "regime": "unregulated",
+      "isolation": 0.8,
+      "cross_pollination": {
+        "A1": 1,
+        "A2": 3,
+        "A3": 0,
+        "A4": 0,
+        "A5": 0,
+        "A6": 0,
+        "A7": 0,
+        "A8": 0,
+        "A9": 0,
+        "A10": 0
+      }
+    }
+  ]
+}

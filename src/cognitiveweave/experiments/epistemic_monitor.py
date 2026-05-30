@@ -68,10 +68,12 @@ class EpistemicMonitor:
         *,
         low_entropy: float = DEFAULT_LOW_ENTROPY,
         high_entropy: float = DEFAULT_HIGH_ENTROPY,
+        write_to_graph: bool = True,
     ) -> None:
         self._neo4j = neo4j
         self._low = low_entropy
         self._high = high_entropy
+        self._write_to_graph = write_to_graph  # False = measure-only (baseline)
         self._history: list[EpistemicState] = []
 
     # ------------------------------------------------------------------
@@ -123,7 +125,8 @@ class EpistemicMonitor:
                 regime=regime,
             )
             self._history.append(state)
-            self._write_to_graph(state)
+            if self._write_to_graph:
+                self._write_state_to_graph(state)
 
             logger.info(
                 "EpistemicMonitor cycle=%d entropy=%.3f regime=%s",
@@ -167,19 +170,41 @@ class EpistemicMonitor:
             return "diverging"
         return "healthy"
 
-    def _write_to_graph(self, state: EpistemicState) -> None:
+    def _write_state_to_graph(self, state: EpistemicState, isolation_rate: float = 0.0) -> None:
         """Upsert the system state node so agents can read it next cycle."""
         self._neo4j.upsert_node(
             _STATE_NODE_ID,
             content=f"System epistemic state: entropy={state.entropy:.3f} regime={state.regime}",
             metadata={
-                "entropy":     state.entropy,
-                "regime":      state.regime,
-                "cycle":       state.cycle,
-                "agent_count": state.agent_count,
-                "cluster":     "system",
+                "entropy":        state.entropy,
+                "regime":         state.regime,
+                "cycle":          state.cycle,
+                "agent_count":    state.agent_count,
+                "isolation_rate": isolation_rate,
+                "cluster":        "system",
             },
         )
+
+
+def find_bridge_nodes(neo4j: Neo4jClient, min_cross_cluster: int = 2) -> list[str]:
+    """Return node IDs that connect ≥ min_cross_cluster different domain clusters.
+
+    These are topologically central nodes — agents migrating here gain access
+    to multiple domain clusters via BFS, enabling cross-pollination.
+    """
+    query = """
+    MATCH (n:KnowledgeNode)--(m:KnowledgeNode)
+    WHERE n.cluster IS NOT NULL AND m.cluster IS NOT NULL
+      AND n.cluster <> m.cluster
+      AND n.cluster <> 'experiment' AND n.cluster <> 'system'
+    WITH n, count(DISTINCT m.cluster) AS cross_links
+    WHERE cross_links >= $min_cross
+    RETURN n.id AS id, cross_links
+    ORDER BY cross_links DESC
+    LIMIT 10
+    """
+    with neo4j._session() as s:
+        return [r["id"] for r in s.run(query, min_cross=min_cross_cluster)]
 
 
 def read_epistemic_signal(neo4j: Neo4jClient) -> dict[str, Any]:
@@ -190,9 +215,10 @@ def read_epistemic_signal(neo4j: Neo4jClient) -> dict[str, Any]:
     """
     node = neo4j.get_node(_STATE_NODE_ID)
     if node is None:
-        return {"entropy": 0.5, "regime": "healthy"}
+        return {"entropy": 0.5, "regime": "healthy", "isolation_rate": 0.0}
     return {
-        "entropy": float(node.get("entropy", 0.5)),
-        "regime":  str(node.get("regime", "healthy")),
-        "cycle":   int(node.get("cycle", 0)),
+        "entropy":        float(node.get("entropy", 0.5)),
+        "regime":         str(node.get("regime", "healthy")),
+        "cycle":          int(node.get("cycle", 0)),
+        "isolation_rate": float(node.get("isolation_rate", 0.0)),
     }

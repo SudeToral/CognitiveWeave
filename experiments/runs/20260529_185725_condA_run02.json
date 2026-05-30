@@ -1,0 +1,62 @@
+{
+  "condition": "A",
+  "run_id": 2,
+  "wall_time_s": 36.70693062496139,
+  "cycles": [
+    {
+      "cycle": 0,
+      "entropy": 0.4102308253447215,
+      "regime": "unregulated",
+      "isolation": 0.6666666666666666,
+      "cross_pollination": {
+        "A1": 0,
+        "A2": 1,
+        "A3": 0
+      }
+    },
+    {
+      "cycle": 1,
+      "entropy": 0.4363431930541992,
+      "regime": "unregulated",
+      "isolation": 0.3333333333333333,
+      "cross_pollination": {
+        "A1": 1,
+        "A2": 2,
+        "A3": 0
+      }
+    },
+    {
+      "cycle": 2,
+      "entropy": 0.4405652681986491,
+      "regime": "unregulated",
+      "isolation": 0.3333333333333333,
+      "cross_pollination": {
+        "A1": 3,
+        "A2": 3,
+        "A3": 0
+      }
+    },
+    {
+      "cycle": 3,
+      "entropy": 0.419548233350118,
+      "regime": "unregulated",
+      "isolation": 0.3333333333333333,
+      "cross_pollination": {
+        "A1": 5,
+        "A2": 4,
+        "A3": 0
+      }
+    },
+    {
+      "cycle": 4,
+      "entropy": 0.4033120274543762,
+      "regime": "unregulated",
+      "isolation": 0.3333333333333333,
+      "cross_pollination": {
+        "A1": 6,
+        "A2": 5,
+        "A3": 0
+      }
+    }
+  ]
+}
